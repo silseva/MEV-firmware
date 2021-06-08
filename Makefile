@@ -13,7 +13,7 @@ include $(CONFPATH)/config/Makefile.inc
 ##
 ## List here subdirectories which contains makefiles
 ##
-SUBDIRS := $(KPATH)
+SUBDIRS := $(KPATH) mxgui
 
 ##
 ## List here your source files (both .s, .c and .cpp)
@@ -24,19 +24,19 @@ main.cpp
 ##
 ## List here additional static libraries with relative path
 ##
-LIBS :=
+LIBS := mxgui/libmxgui.a
 
 ##
 ## List here additional include directories (in the form -Iinclude_dir)
 ##
-INCLUDE_DIRS :=
+INCLUDE_DIRS := -Imxgui -Isrc
 
 ##############################################################################
 ## You should not need to modify anything below                             ##
 ##############################################################################
 
 ifeq ("$(VERBOSE)","1")
-Q := 
+Q :=
 ECHO := @true
 else
 Q := @

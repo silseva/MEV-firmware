@@ -1,0 +1,8 @@
+*.a
+*.d
+*.o
+*.bin
+*.elf
+*.map
+*.hex
+*.kdev4
