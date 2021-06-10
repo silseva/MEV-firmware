@@ -38,9 +38,9 @@ Button::Button(const Point a, const Point b, const std::string& label,
 
 Button::Button(const mxgui::Point a, const int width, const int height,
                const std::string& label, const mxgui::Font labelFont,
-               const bool togglable) : a(a), b(a.x() + width, a.y() + height),
-               down(false), clicked(false), togglable(togglable), label(label),
-               font(labelFont){ }
+               const bool togglable) :
+               Button(a, Point(a.x() + width, a.y() + height), label, labelFont,
+                      togglable){ }
 
 Button::~Button()
 {

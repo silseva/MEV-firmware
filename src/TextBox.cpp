@@ -40,9 +40,9 @@ TextBox::TextBox(const mxgui::Point a, const mxgui::Point b,
 
 TextBox::TextBox(const mxgui::Point a, const int width, const int height,
                  const mxgui::Color bgColor, const mxgui::Color textColor,
-                 const mxgui::Font& font) : a(a),
-                 b(a.x() + width, a.y() + height), bgColor(bgColor),
-                 textColor(textColor), font(font) { }
+                 const mxgui::Font& font) :
+                 TextBox(a, Point(a.x() + width, a.y() + height),
+                            bgColor, textColor, font) { }
 
 void TextBox::draw(mxgui::DrawingContext& dc)
 {

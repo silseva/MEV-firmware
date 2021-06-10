@@ -35,8 +35,9 @@ Rectangle::Rectangle(const Point a, const Point b, const Color color) : a(a),
                      b(b), border(color) { }
 
 Rectangle::Rectangle(const Point a, const int width, const int height,
-                     const Color color) : a(a), b(a.x() + width, a.y() + height),
-                     border(color) { }
+                     const Color color) :
+                     Rectangle(a, Point(a.x() + width, a.y() + height), color)
+                     { }
 
 void Rectangle::draw(mxgui::DrawingContext& dc)
 {

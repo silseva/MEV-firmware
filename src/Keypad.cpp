@@ -48,7 +48,7 @@ Keypad::Keypad (const mxgui::Point p) :
 
     // Starting coordinates for keyboard buttons
     int x = textBox.getUpperLeftCorner().x();
-    int y = textBox.getBottomRightCorner().y() + btnSpacing;
+    int y = textBox.getLowerRightCorner().y() + btnSpacing;
 
     int pos = 0;
     for(int col = 0; col < 4; col++)
@@ -57,7 +57,7 @@ Keypad::Keypad (const mxgui::Point p) :
         {
             Point p(x, y);
             Button *b = new Button(p, btnWidth, btnHeight, labels[pos], droid21);
-            x = b->getBottomRightCorner().x() + btnSpacing;
+            x = b->getLowerRightCorner().x() + btnSpacing;
             keyboard[pos] = b;
             pos++;
         }

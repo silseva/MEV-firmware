@@ -82,7 +82,7 @@ public:
      * Get the coordinates of the button's bottom right corner.
      * \return a Point containing coordinates of the bottom right corner.
      */
-    mxgui::Point getBottomRightCorner() { return b; }
+    mxgui::Point getLowerRightCorner() { return b; }
 
     /**
      * Handle a touch of the screen that could possibly result in the button

@@ -74,7 +74,7 @@ public:
      * Get the coordinates of the rectangle's bottom right corner.
      * \return a Point containing coordinates of the bottom right corner.
      */
-    mxgui::Point getBottomRightCorner() { return b; }
+    mxgui::Point getLowerRightCorner() { return b; }
 
     /**
      * Draw the button
