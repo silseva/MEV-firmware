@@ -26,10 +26,10 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <Rectangle.h>
 #include <misc_inst.h>
 #include <cstring>
 #include <limits>
+#include "Rectangle.h"
 #include "Keypad.h"
 
 using namespace std;

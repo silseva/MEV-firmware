@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2013 by Terraneo Federico                               *
- *                 2021 by Silvano Seva                                    *
+ *   Copyright (C) 2021 by Silvano Seva                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,49 +25,13 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <misc_inst.h>
-#include <Rectangle.h>
+#ifndef GRAPHICS_H
+#define GRAPHICS_H
+
+#include "Rectangle.h"
+#include "DisplayBox.h"
 #include "TextBox.h"
+#include "Button.h"
+#include "Keypad.h"
 
-using namespace std;
-using namespace mxgui;
-
-TextBox::TextBox(const mxgui::Point a, const mxgui::Point b,
-                 const mxgui::Color bgColor, const mxgui::Color textColor,
-                 const mxgui::Font& font) : a(a), b(b), bgColor(bgColor),
-                 textColor(textColor), font(font) { }
-
-TextBox::TextBox(const mxgui::Point a, const int width, const int height,
-                 const mxgui::Color bgColor, const mxgui::Color textColor,
-                 const mxgui::Font& font) :
-                 TextBox(a, Point(a.x() + width, a.y() + height),
-                            bgColor, textColor, font) { }
-
-void TextBox::draw(mxgui::DrawingContext& dc)
-{
-    // Draw borders
-    ShadowRectangle rect(a, b, make_pair(darkGrey, lightGrey));
-    rect.draw(dc);
-
-    // Create the filled zone for text
-    int xa = a.x() + 1;
-    int ya = a.y() + 1;
-
-    int xb = b.x() - 1;
-    int yb = b.y() - 1;
-
-    dc.clear(Point(xa, ya), Point(xb, yb), bgColor);
-
-    // Write text, centered in the box
-    int len = font.calculateLength(text.c_str());
-    int dx = xb - xa;
-    xa += (dx - len)/2;
-    ya += ((yb - ya)/2 - font.getHeight()/2);
-
-    dc.setFont(font);
-    dc.setTextColor(textColor, bgColor);
-    if(len <= dx) dc.write(Point(xa, ya), text.c_str());
-}
-
-
-
+#endif // GRAPHICS_H

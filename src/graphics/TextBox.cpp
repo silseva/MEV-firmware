@@ -26,66 +26,49 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <Rectangle.h>
-#include "DisplayBox.h"
+#include <misc_inst.h>
+#include "Rectangle.h"
+#include "TextBox.h"
 
-#include <stdio.h>
-
+using namespace std;
 using namespace mxgui;
 
-DisplayBox::DisplayBox(const mxgui::Point a, const int width, const int height,
-                       const int sideMargin, const int entryMargin,
-                       std::vector< std::string >& labels,
-                       const mxgui::Color bgColor, const mxgui::Font& font) :
-                       DisplayBox(a, Point(a.x() + width, a.y() + height),
-                                sideMargin, entryMargin, labels, bgColor, font)
-                       { }
+TextBox::TextBox(const mxgui::Point a, const mxgui::Point b,
+                 const mxgui::Color bgColor, const mxgui::Color textColor,
+                 const mxgui::Font& font) : a(a), b(b), bgColor(bgColor),
+                 textColor(textColor), font(font) { }
 
-DisplayBox::DisplayBox(const mxgui::Point a, const mxgui::Point b,
-                       const int sideMargin, const int entryMargin,
-                       std::vector< std::string >& labels,
-                       const mxgui::Color bgColor, const mxgui::Font& font) :
-                       a(a), b(b), sideMargin(sideMargin),
-                       entryMargin(entryMargin), labels(labels),
-                       bgColor(bgColor), font(font)
+TextBox::TextBox(const mxgui::Point a, const int width, const int height,
+                 const mxgui::Color bgColor, const mxgui::Color textColor,
+                 const mxgui::Font& font) :
+                 TextBox(a, Point(a.x() + width, a.y() + height),
+                            bgColor, textColor, font) { }
+
+void TextBox::draw(mxgui::DrawingContext& dc)
 {
-    // Compute vertical spacing and initialise the entry vector
-    size_t nElems = labels.size();
-    ySpacing = (b.y() - a.y() - nElems * font.getHeight())/(nElems + 1);
-    entries.assign(nElems, std::make_pair("", white));
-}
-
-void DisplayBox::setEntryValue(const int entry, const std::string& text,
-                               const mxgui::Color color)
-{
-    if(static_cast< size_t >(entry) >= entries.size()) return;
-    entries[entry].first  = text;
-    entries[entry].second = color;
-}
-
-
-void DisplayBox::draw(mxgui::DrawingContext& dc)
-{
-    // Draw background
-    FilledRectangle rect(a, b, bgColor, bgColor);
+    // Draw borders
+    ShadowRectangle rect(a, b, make_pair(darkGrey, lightGrey));
     rect.draw(dc);
 
-    // Draw labels and entries
+    // Create the filled zone for text
+    int xa = a.x() + 1;
+    int ya = a.y() + 1;
+
+    int xb = b.x() - 1;
+    int yb = b.y() - 1;
+
+    dc.clear(Point(xa, ya), Point(xb, yb), bgColor);
+
+    // Write text, centered in the box
+    int len = font.calculateLength(text.c_str());
+    int dx = xb - xa;
+    xa += (dx - len)/2;
+    ya += ((yb - ya)/2 - font.getHeight()/2);
+
     dc.setFont(font);
-    int x = a.x() + sideMargin;
-    int y = a.y() + ySpacing;
-
-    for(size_t i = 0; i < labels.size(); i++)
-    {
-        Point pl(x, y);
-        dc.setTextColor(white, bgColor);
-        dc.write(pl, labels[i].c_str());
-
-        Point pe(x + entryMargin, y);
-        dc.setTextColor(entries[i].second, bgColor);
-        dc.write(pe, entries[i].first.c_str());
-
-        y += font.getHeight() + ySpacing;
-    }
+    dc.setTextColor(textColor, bgColor);
+    if(len <= dx) dc.write(Point(xa, ya), text.c_str());
 }
+
+
 

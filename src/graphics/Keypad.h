@@ -33,8 +33,8 @@
 #include <point.h>
 #include <color.h>
 #include <cstdint>
-#include <Button.h>
-#include <TextBox.h>
+#include "Button.h"
+#include "TextBox.h"
 
 /**
  * Class for drawing and managing an input keypad.
