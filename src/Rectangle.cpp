@@ -61,7 +61,9 @@ FilledRectangle::FilledRectangle(const mxgui::Point a, const int width,
 void FilledRectangle::draw(mxgui::DrawingContext& dc)
 {
     Rectangle::draw(dc);
-    dc.clear(a, b, fill);
+    Point start(a.x() + 1, a.y() + 1);
+    Point end  (b.x() - 1, b.y() - 1);
+    dc.clear(start, end, fill);
 }
 
 ShadowRectangle::ShadowRectangle(const mxgui::Point a, const mxgui::Point b,
