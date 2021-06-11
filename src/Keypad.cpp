@@ -26,6 +26,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
+#include <Rectangle.h>
 #include <misc_inst.h>
 #include <cstring>
 #include <limits>
@@ -39,11 +40,10 @@ Keypad::Keypad (const unsigned int x, const unsigned int y) :
 
 Keypad::Keypad (const mxgui::Point p) :
       startPoint(p), inputPos(0), okPressed(0), dotPressed(false),
-      rect(startPoint, totalWidth, totalHeigth, black, grey),
       textBox(Point(startPoint.x() + btnSpacing, startPoint.y() + btnSpacing),
               Point(startPoint.x() + btnSpacing + textBoxWidth,
                     startPoint.y() + btnSpacing + btnHeight),
-                    black, white, droid21)
+                    white, black, droid21)
 {
 
     // Starting coordinates for keyboard buttons
@@ -72,7 +72,15 @@ Keypad::Keypad (const mxgui::Point p) :
 
 void Keypad::draw(mxgui::DrawingContext& dc)
 {
-    rect.draw(dc);
+
+    ShadowRectangle borders(startPoint, totalWidth, totalHeigth,
+                            make_pair(lightGrey, darkGrey));
+
+    Point fillStart(startPoint.x() + 1, startPoint.y() + 1);
+    Point fillStop (fillStart.x() + totalWidth  - 1,
+                    fillStart.y() + totalHeigth - 1);
+    dc.clear(fillStart, fillStop, grey);
+    borders.draw(dc);
     textBox.draw(dc);
     for(uint8_t i = 0; i < 12; i++) keyboard[i]->draw(dc);
 }
@@ -90,13 +98,13 @@ bool Keypad::handleEvent(mxgui::Event& e, mxgui::DrawingContext& dc)
     {
         bool pressed = keyboard[i]->handleTouchEvent(e);
 
-        bool doubleDot = dotPressed && (i == 10);
+        bool doubleDot = dotPressed && (i == 9);
         if(pressed && (i == 11)) okPressed  = true;
         if(pressed && !okPressed && !doubleDot && (inputPos < sizeof(input)))
         {
             input[inputPos] = labels[i].at(0);
             inputPos++;
-            if(i == 10) dotPressed = true;
+            if(i == 9) dotPressed = true;
         }
 
         keyboard[i]->draw(dc);

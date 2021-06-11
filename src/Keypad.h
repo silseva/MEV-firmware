@@ -35,7 +35,6 @@
 #include <cstdint>
 #include <Button.h>
 #include <TextBox.h>
-#include <Rectangle.h>
 
 /**
  * Class for drawing and managing an input keypad.
@@ -79,6 +78,18 @@ public:
     }
 
     /**
+     * Get keypad's total width.
+     * \return keypad width.
+     */
+    static int getWidth() { return totalWidth; }
+
+    /**
+     * Get keypad's total height.
+     * \return keypad height.
+     */
+    static int getHeight() { return totalHeigth; }
+
+    /**
      * Draw the keypad.
      */
     void draw(mxgui::DrawingContext& dc);
@@ -108,11 +119,10 @@ public:
 private:
 
     mxgui::Point startPoint;    // Keypad starting point, its upper left corner.
-    char input[17];             // Array for user input.
+    char input[16];             // Array for user input.
     uint8_t inputPos;           // Current position of user input inside the array.
     bool okPressed;             // Flag for "OK" button pressed.
     bool dotPressed;            // Flag for dot button pressed.
-    FilledRectangle rect;       // Background rectangle.
     TextBox textBox;            // Text box for user input visualisation
     Button  *keyboard[12];      // Button matrix
 
@@ -126,7 +136,7 @@ private:
     const std::string labels[12] = { "1", "2", "3",
                                      "4", "5", "6",
                                      "7", "8", "9",
-                                     "0", ".", "OK"};
+                                     ".", "0", "OK"};
 };
 
 #endif // KEYPAD_H
