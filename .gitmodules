@@ -1,6 +1,6 @@
 [submodule "miosix-kernel"]
-	path = miosix-kernel
+	path = lib/miosix-kernel
 	url = https://miosix.org/git-public/miosix-kernel.git
 [submodule "mxgui"]
-	path = mxgui
+	path = lib/mxgui
 	url = https://github.com/fedetft/mxgui.git
