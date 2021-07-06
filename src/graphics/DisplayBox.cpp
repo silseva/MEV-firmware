@@ -36,18 +36,21 @@ using namespace mxgui;
 DisplayBox::DisplayBox(const mxgui::Point a, const int width, const int height,
                        const int sideMargin, const int entryMargin,
                        std::vector< std::string >& labels,
-                       const mxgui::Color bgColor, const mxgui::Font& font) :
+                       const mxgui::Color bgColor, const mxgui::Color labelColor,
+                       const mxgui::Font& font) :
                        DisplayBox(a, Point(a.x() + width, a.y() + height),
-                                sideMargin, entryMargin, labels, bgColor, font)
+                                sideMargin, entryMargin, labels, bgColor,
+                                labelColor, font)
                        { }
 
 DisplayBox::DisplayBox(const mxgui::Point a, const mxgui::Point b,
                        const int sideMargin, const int entryMargin,
                        std::vector< std::string >& labels,
-                       const mxgui::Color bgColor, const mxgui::Font& font) :
+                       const mxgui::Color bgColor, const mxgui::Color labelColor,
+                       const mxgui::Font& font) :
                        a(a), b(b), sideMargin(sideMargin),
                        entryMargin(entryMargin), labels(labels),
-                       bgColor(bgColor), font(font)
+                       bgColor(bgColor), labelColor(labelColor), font(font)
 {
     // Compute vertical spacing and initialise the entry vector
     size_t nElems = labels.size();
@@ -78,7 +81,7 @@ void DisplayBox::draw(mxgui::DrawingContext& dc)
     for(size_t i = 0; i < labels.size(); i++)
     {
         Point pl(x, y);
-        dc.setTextColor(white, bgColor);
+        dc.setTextColor(labelColor, bgColor);
         dc.write(pl, labels[i].c_str());
 
         Point pe(x + entryMargin, y);

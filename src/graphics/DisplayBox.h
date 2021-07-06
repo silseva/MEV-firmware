@@ -57,7 +57,8 @@ public:
      */
     DisplayBox(const mxgui::Point a, const mxgui::Point b, const int sideMargin,
                const int entryMargin, std::vector< std::string >& labels,
-               const mxgui::Color bgColor, const mxgui::Font& font);
+               const mxgui::Color bgColor, const mxgui::Color labelColor,
+               const mxgui::Font& font);
 
     /**
      * Constructor.
@@ -74,7 +75,7 @@ public:
     DisplayBox(const mxgui::Point a, const int width, const int height,
                const int sideMargin, const int entryMargin,
                std::vector< std::string >& labels, const mxgui::Color bgColor,
-               const mxgui::Font& font);
+               const mxgui::Color labelColor, const mxgui::Font& font);
 
     /**
      * Destructor.
@@ -118,6 +119,7 @@ private:
     std::vector< std::pair< std::string,
                             mxgui::Color > > entries;   // Entries.
     mxgui::Color bgColor;                               // Background color.
+    const mxgui::Color labelColor;                      // Label text color.
     const mxgui::Font& font;                            // Text font.
 };
 
