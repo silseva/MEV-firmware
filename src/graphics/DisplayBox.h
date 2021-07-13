@@ -56,7 +56,7 @@ public:
      * \param font: text font.
      */
     DisplayBox(const mxgui::Point a, const mxgui::Point b, const int sideMargin,
-               const int entryMargin, std::vector< std::string >& labels,
+               const int entryMargin, const std::vector< std::string >& labels,
                const mxgui::Color bgColor, const mxgui::Color labelColor,
                const mxgui::Font& font);
 
@@ -74,8 +74,9 @@ public:
      */
     DisplayBox(const mxgui::Point a, const int width, const int height,
                const int sideMargin, const int entryMargin,
-               std::vector< std::string >& labels, const mxgui::Color bgColor,
-               const mxgui::Color labelColor, const mxgui::Font& font);
+               const std::vector< std::string >& labels,
+               const mxgui::Color bgColor, const mxgui::Color labelColor,
+               const mxgui::Font& font);
 
     /**
      * Destructor.
@@ -83,20 +84,20 @@ public:
     ~DisplayBox() { }
 
     /**
-     * Get the coordinates of the rectangle's upper left corner.
+     * Get the coordinates of the display box's upper left corner.
      * \return a Point containing coordinates of the upper left corner.
      */
     mxgui::Point getUpperLeftCorner() { return a; }
 
     /**
-     * Get the coordinates of the rectangle's bottom right corner.
+     * Get the coordinates of the display box's bottom right corner.
      * \return a Point containing coordinates of the bottom right corner.
      */
     mxgui::Point getLowerRightCorner() { return b; }
 
     /**
      * Set the text of a given entry.
-     * \param entry: number of the entry to be updated.
+     * \param entry: number of the entry to be updated, starting from zero.
      * \param text: text to be displayed.
      * \param color: text color.
      */
@@ -115,7 +116,7 @@ private:
     int sideMargin;                                     // Side margin.
     int entryMargin;                                    // Entry margin.
     int ySpacing;                                       // Vertical spacing between entries.
-    std::vector< std::string >& labels;                 // Entry labels.
+    const std::vector< std::string >& labels;           // Entry labels.
     std::vector< std::pair< std::string,
                             mxgui::Color > > entries;   // Entries.
     mxgui::Color bgColor;                               // Background color.
