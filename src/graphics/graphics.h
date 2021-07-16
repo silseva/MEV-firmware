@@ -28,8 +28,9 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "Rectangle.h"
 #include "DisplayBox.h"
+#include "ConfirmBox.h"
+#include "Rectangle.h"
 #include "TextBox.h"
 #include "Button.h"
 #include "Keypad.h"
