@@ -76,6 +76,7 @@ private:
     std::unique_ptr< Button >     disable;
     std::unique_ptr< Button >     setTin;
     std::unique_ptr< Button >     setIE;
+    std::unique_ptr< Button >     setFs;
 
     BedFsmData* fsm;
 };

@@ -33,13 +33,15 @@ BedMainPage::BedMainPage(BedFsmData* fsm) : fsm(fsm)
 {
     statusBox = make_unique< DisplayBox >(Point(0,0), fsm->dc.getWidth(),
                                           sbHeight, leftMargin,
-                                          fsm->dc.getWidth()/2, paramLabels,
+                                          fsm->dc.getWidth()/2 - 20, paramLabels,
                                           sbBgColor, sbLabColor, droid21b);
 
     unsigned int btnWidth = (fsm->dc.getWidth() - (2*leftMargin + btnSpace))/2;
 
-    enable = make_unique< Button >(Point(leftMargin, fsm->dc.getHeight()/2),
-                                   btnWidth, btnHeight, "Enable", droid21);
+    enable = make_unique< Button >
+    (Point(leftMargin,
+           statusBox->getLowerRightCorner().y() + btnSpace),
+     btnWidth, btnHeight, "Enable", droid21);
 
     disable = make_unique< Button >
     (Point(enable->getLowerRightCorner().x() + btnSpace,
@@ -55,6 +57,11 @@ BedMainPage::BedMainPage(BedFsmData* fsm) : fsm(fsm)
     (Point(disable->getUpperLeftCorner().x(),
            disable->getLowerRightCorner().y() + btnSpace),
      btnWidth, btnHeight, "Set I/E", droid21);
+
+    setFs = make_unique< Button >
+    (Point(setTin->getUpperLeftCorner().x(),
+           setTin->getLowerRightCorner().y() + btnSpace),
+     btnWidth, btnHeight, "Set F_s", droid21);
 }
 
 BedMainPage::~BedMainPage() { }
@@ -71,10 +78,12 @@ FsmState *BedMainPage::update()
     bool disPressed = disable->handleTouchEvent(event);
     bool tinPressed = setTin->handleTouchEvent(event);
     bool ratPressed = setIE->handleTouchEvent(event);
+    bool fsaPressed = setFs->handleTouchEvent(event);
     enable->draw(fsm->dc);
     disable->draw(fsm->dc);
     setTin->draw(fsm->dc);
     setIE->draw(fsm->dc);
+    setFs->draw(fsm->dc);
 
     statusBox->setEntryValue(0, "99",   black);
     statusBox->setEntryValue(1, "100",  black);
@@ -111,6 +120,13 @@ FsmState *BedMainPage::update()
         return &fsm->inputVal;
     }
 
+    // Handle sample frequency input request
+    if(fsaPressed)
+    {
+        fsm->state.set_fsample = true;
+        return &fsm->inputVal;
+    }
+
     return nullptr;
 }
 
@@ -123,9 +139,11 @@ void BedMainPage::leave()
     disable->handleTouchEvent(event);
     setTin->handleTouchEvent(event);
     setIE->handleTouchEvent(event);
+    setFs->handleTouchEvent(event);
 
     enable->draw(fsm->dc);
     disable->draw(fsm->dc);
     setTin->draw(fsm->dc);
     setIE->draw(fsm->dc);
+    setFs->draw(fsm->dc);
 }

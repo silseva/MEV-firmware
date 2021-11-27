@@ -61,6 +61,12 @@ FsmState *BedInputValue::update()
                 fsm->state.set_ratio = false;
             }
 
+            if(fsm->state.set_fsample)
+            {
+                fsm->state.Fsample = value;
+                fsm->state.set_fsample = false;
+            }
+
             return &fsm->mainPage;
         }
     }
