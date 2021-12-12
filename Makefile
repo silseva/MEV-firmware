@@ -5,31 +5,54 @@ MAKEFILE_VERSION := 1.09
 GCCMAJOR := $(shell arm-miosix-eabi-gcc --version | \
                     perl -e '$$_=<>;/\(GCC\) (\d+)/;print "$$1"')
 ## Path to kernel directory (edited by init_project_out_of_git_repo.pl)
-KPATH := miosix-kernel/miosix
+KPATH := lib/miosix-kernel/miosix
 ## Path to config directory (edited by init_project_out_of_git_repo.pl)
-CONFPATH := .
+CONFPATH := lib/
 include $(CONFPATH)/config/Makefile.inc
 
 ##
 ## List here subdirectories which contains makefiles
 ##
-SUBDIRS := $(KPATH) mxgui
+SUBDIRS := $(KPATH) lib/mxgui
 
 ##
 ## List here your source files (both .s, .c and .cpp)
 ##
 SRC :=                                  \
-main.cpp
+src/graphics/icons/warning_50x50.cpp    \
+src/graphics/ConfirmBox.cpp             \
+src/graphics/DisplayBox.cpp             \
+src/graphics/Rectangle.cpp              \
+src/graphics/TextBox.cpp                \
+src/graphics/Button.cpp                 \
+src/graphics/Keypad.cpp                 \
+\
+src/drivers/ADC122S021.cpp              \
+\
+src/Bed/UI/UiStateMain.cpp              \
+src/Bed/UI/UiStateInputValue.cpp        \
+\
+src/Bed/ValveController.cpp             \
+src/Bed/SensorSampler.cpp               \
+\
+src/main.cpp
+
+# src/BellJar/UI/UiStateConfAut.cpp       \
+# src/BellJar/UI/UiStateConfMan.cpp       \
+# src/BellJar/UI/UiStateConfSp.cpp        \
+# src/BellJar/UI/UiStateMain.cpp          \
+# src/BellJar/UI/UiStateSetSp.cpp         \
+
 
 ##
 ## List here additional static libraries with relative path
 ##
-LIBS := mxgui/libmxgui.a
+LIBS := lib/mxgui/libmxgui.a
 
 ##
 ## List here additional include directories (in the form -Iinclude_dir)
 ##
-INCLUDE_DIRS := -Imxgui -Isrc
+INCLUDE_DIRS := -Ilib/mxgui -Isrc
 
 ##############################################################################
 ## You should not need to modify anything below                             ##

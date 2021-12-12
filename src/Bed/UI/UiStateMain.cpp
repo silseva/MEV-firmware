@@ -24,10 +24,10 @@
 using namespace mxgui;
 using namespace std;
 
-const vector< string > BedMainPage::paramLabels = {"Set point",
-                                                  "Level",
-                                                  "Ti/Ratio",
-                                                  "Status"};
+const vector< string > BedMainPage::paramLabels = {"Pressure",
+                                                   "Flow",
+                                                   "Ti/Ratio",
+                                                   "Status"};
 
 BedMainPage::BedMainPage(BedFsmData* fsm) : fsm(fsm)
 {
@@ -85,11 +85,18 @@ FsmState *BedMainPage::update()
     setIE->draw(fsm->dc);
     setFs->draw(fsm->dc);
 
-    statusBox->setEntryValue(0, "99",   black);
-    statusBox->setEntryValue(1, "100",  black);
+    // Update pressure indicator
+    char text[50] = {0};
+    snprintf(text, sizeof(text), "%03.1f  %03.1f", fsm->state.press_1,
+                                                   fsm->state.press_2);
+    statusBox->setEntryValue(0, text,  black);
+
+    // Update flow rate indicator
+    snprintf(text, sizeof(text), "%03.2f  %03.2f", fsm->state.flow_1,
+                                                   fsm->state.flow_2);
+    statusBox->setEntryValue(1, text,  black);
 
     // Update Ti/Ratio indicator
-    char text[50] = {0};
     snprintf(text, sizeof(text), "%.1f / 1:%.2f", fsm->state.tIns,
                                                   fsm->state.IE);
     statusBox->setEntryValue(2, text,  black);

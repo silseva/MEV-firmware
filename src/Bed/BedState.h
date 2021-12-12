@@ -27,4 +27,11 @@ struct StateData
     float tIns;
     float IE;
     float Fsample;
+
+    float press_1;
+    float press_2;
+    float flow_1;
+    float flow_2;
 };
+
+extern StateData state;
