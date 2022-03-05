@@ -48,12 +48,25 @@ void ValveController::run()
             uint32_t tIns = static_cast< uint32_t >(state.tIns * 1000.0f);
             uint32_t tEsp = static_cast< uint32_t >(state.tIns * state.IE
                                                                * 1000.0f);
+
+            // Force EV1 and EV2 to closed state, wait 50ms to compensate for
+            // valve closing time.
+            hpOutputs::out_1::low();
             hpOutputs::out_2::low();
+            Thread::sleep(50);
+
+            // Open EV1
             hpOutputs::out_1::high();
             miosix::ledOn();
             Thread::sleep(tIns);
 
+            // Force EV1 and EV2 to closed state, wait 50ms to compensate for
+            // valve closing time.
             hpOutputs::out_1::low();
+            hpOutputs::out_2::low();
+            Thread::sleep(50);
+
+            // Open EV2
             hpOutputs::out_2::high();
             miosix::ledOff();
             Thread::sleep(tEsp);
