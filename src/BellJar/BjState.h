@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/PidController.h"
+#include "common/PidRegulator.h"
 
 enum class CtrlMode
 {

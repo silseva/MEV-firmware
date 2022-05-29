@@ -58,7 +58,7 @@ struct PidParameters
 /**
  * Discrete-time PID regulator.
  */
-class PidController
+class PidRegulator
 {
 public:
 
@@ -66,26 +66,22 @@ public:
      * Constructor.
      * @param p: regulator parameters
      */
-    PidController(const PidParameters& p);
+    PidRegulator(const PidParameters& p);
 
     /**
      * Destructor
      */
-    ~PidController();
-
-    /**
-     * Set regulator's reference to @param w
-     */
-    void setReference(const float w);
+    ~PidRegulator();
 
     /**
      * Compute one control action, i.e. perform one step of a periodic
      * discrete-time regulator.
+     * @param w: regulator set point.
      * @param y: actual value of the process' output, computation of the error
      * with respect to the reference is done internally.
      * @return newly computed control action u
      */
-    float computeAction(const float y);
+    float computeAction(const float w, const float y);
 
     /**
      * Get actual regulator's tuning parameters.
@@ -101,13 +97,20 @@ public:
 
     /**
      * Enable tracking mode.
+     * To avoid bumps, when tracking is enabled the regulator output keeps the
+     * last value computed before switching.
      */
-    void enableTracking(float uref);
+    void enableTracking();
 
     /**
      * Disable tracking mode.
      */
     void disableTracking();
+
+    /**
+     * Set a value for the output whe regulator is in tracking mode.
+     */
+    void setTrackingOutput(float uref);
 
 private:
 
@@ -115,7 +118,6 @@ private:
     PidParameters pars;
 
     // Controller internal state
-    float w;
     float u;
     float up;
     float ud;

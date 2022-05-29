@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2022 Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,21 @@
  *
  */
 
-#include "PidController.h"
+#include "PidRegulator.h"
 
-PidController::PidController(const PidParameters& p) : pars(p),
-                                trackingEnabled(false), utr(0.0f)
-{
-}
-
-PidController::~PidController()
+PidRegulator::PidRegulator(const PidParameters& p) : pars(p), u(0.0f), up(0.0f),
+ud(0.0f), ui(0.0f), uio(0.0f), edo(0.0f), udo(0.0f),trackingEnabled(false),
+utr(0.0f)
 {
 
 }
 
-void PidController::setReference(const float w)
+PidRegulator::~PidRegulator()
 {
-    this->w = w;
+
 }
 
-float PidController::computeAction(const float y)
+float PidRegulator::computeAction(const float w, const float y)
 {
     // Run mode: at each step a new value for up, ui and ud is computed.
     // Hold mode: up, ui and ud are not updated and keep their previous value,
@@ -71,24 +68,29 @@ float PidController::computeAction(const float y)
     return u;
 }
 
-PidParameters PidController::getParameters() const
+PidParameters PidRegulator::getParameters() const
 {
     return pars;
 }
 
-void PidController::setParameters(const PidParameters& p)
+void PidRegulator::setParameters(const PidParameters& p)
 {
     pars = p;
 }
 
-void PidController::enableTracking(float uref)
+void PidRegulator::enableTracking()
 {
-    utr = uref;
+    utr = u;
     trackingEnabled = true;
 }
 
-void PidController::disableTracking()
+void PidRegulator::disableTracking()
 {
     trackingEnabled = false;
     utr = 0.0f;
+}
+
+void PidRegulator::setTrackingOutput(float uref)
+{
+    utr = uref;
 }
