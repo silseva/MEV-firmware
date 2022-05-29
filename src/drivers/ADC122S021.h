@@ -1,6 +1,6 @@
 /*
  * MEV board firmware
- * Copyright (C) 2021  Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2021 - 2022 Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,13 +49,23 @@ public:
     ~ADC122S021();
 
     /**
-     * Read the current value of one of the two ADC channel.
+     * Read the current value of one of the two ADC channel and returns it as
+     * raw value expressed in ADC counts.
+     * Returns 0xFFFF in case of an hardware failure.
+     *
+     * @param channel: channel number.
+     * @return channel raw value or 0xFFFF on failure.
+     */
+    uint16_t getRawValue(const AdcChannel channel);
+
+    /**
+     * Read the current voltage of one of the two ADC channel.
      * Returns a signalling NaN in case of an hardware failure.
      *
      * @param channel: channel number.
      * @return channel value or signalling NaN on failure.
      */
-    float getValue(const AdcChannel channel);
+    float getVoltage(const AdcChannel channel);
 
     /**
      * Copy constructor, deleted as this class is singleton.

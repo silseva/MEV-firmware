@@ -1,6 +1,6 @@
 /*
  * MEV board firmware
- * Copyright (C) 2021  Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2021 - 2022  Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ ADC122S021::~ADC122S021()
     RCC->APB2ENR &= ~RCC_APB2ENR_SPI4EN;
 }
 
-float ADC122S021::getValue(const AdcChannel channel)
+uint16_t ADC122S021::getRawValue(const AdcChannel channel)
 {
     // Select the ADC
     ScopedCs cs;
@@ -95,7 +95,7 @@ float ADC122S021::getValue(const AdcChannel channel)
     {
         if((getTick() - t) > 10)
         {
-            return numeric_limits< float >::signaling_NaN();
+            return 0xFFFF;
         }
     }
 
@@ -109,10 +109,15 @@ float ADC122S021::getValue(const AdcChannel channel)
     {
         if((getTick() - t) > 10)
         {
-            return numeric_limits< float >::signaling_NaN();
+            return 0xFFFF;
         }
     }
 
-    uint16_t value = SPI4->DR;
+    return SPI4->DR;
+}
+
+float ADC122S021::getVoltage(const AdcChannel channel)
+{
+    uint16_t value = getRawValue(channel);
     return (static_cast< float >(value) * 5.0f) / 4096.0f;
 }
