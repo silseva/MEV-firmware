@@ -45,9 +45,16 @@ float PidRegulator::computeAction(const float w, const float y)
     // Integrative
     ui = pars.k*(pars.Tsample/pars.Ti)*e + uio;
 
-    //derivative
-    ud = pars.Td/(pars.Td+pars.N*pars.Tsample)*udo +
-            ((pars.k*pars.N*pars.Td)/(pars.Td+pars.N*pars.Tsample))*(e-edo);
+    // Derivative
+    if((pars.Td != 0) && (pars.N != 0))
+    {
+        ud = pars.Td/(pars.Td+pars.N*pars.Tsample)*udo
+           + ((pars.k*pars.N*pars.Td)/(pars.Td+pars.N*pars.Tsample))*(e-edo);
+    }
+    else
+    {
+        ud = 0;
+    }
 
     if(trackingEnabled)
     {
