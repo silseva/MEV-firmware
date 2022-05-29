@@ -34,10 +34,11 @@ struct BjState
     float         ctOutput;         ///< Controller output
     float         manOutput;        ///< Output value for manual mode
 
-    uint16_t      currLevelRaw;     ///< Raw value of BJ level in ADC counts
-    uint16_t      currLevelAdj;     ///< Adjusted value of BJ level w.r.t zero
-    float         currLevelNorm;    ///< Normalised value of BJ level in range 0.0 - 1.0
-    uint16_t      levelZero;        ///< Raw value in ADC counts correspoding to BJ zero level
+    uint16_t      levelRaw;        ///< Raw value of BJ level in ADC counts
+    uint16_t      levelAdj;        ///< Adjusted value of BJ level w.r.t zero
+    float         levelNorm;       ///< Normalised value of BJ level in range 0.0 - 1.0
+    uint16_t      zeroLevel;       ///< Raw value in ADC counts correspoding to BJ zero level
+    uint16_t      maxLevel;        ///< Raw value in ADC counts correspoding to BJ max level
 };
 
 extern BjState bjState;

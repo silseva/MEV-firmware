@@ -71,7 +71,7 @@ void LevelController::run()
 
         // Controller step
         bjState.ctOutput = pid.computeAction(bjState.ctSetPoint,
-                                             bjState.currLevelNorm);
+                                             bjState.levelNorm);
 
         // Update actuation
         blower.setValue(bjState.ctOutput);
@@ -88,23 +88,25 @@ void LevelController::updateMeasurements()
     // Bad measurement, return. Allowed range is 0 - 0x0FFF
     if(level > 0x1000) return;
 
-    bjState.currLevelRaw = level;
+    bjState.levelRaw = level;
 
-    if(level < bjState.levelZero)
-    {
-        bjState.currLevelAdj  = 0;
-        bjState.currLevelNorm = 0.0f;
-    }
-    else
-    {
-        // Adust to zero level
-        bjState.currLevelAdj  = bjState.currLevelRaw
-                                - bjState.levelZero;
+    level = std::max(level, bjState.zeroLevel); // Saturate to min value
+    level = std::min(level, bjState.maxLevel);  // Saturate to max value
 
-        // Normalise to range 0.0 - 1.0
-        float levelNorm = static_cast< float >(bjState.currLevelAdj)
-                        / static_cast< float >(0x0FFF - bjState.levelZero);
-        bjState.currLevelNorm = std::min(levelNorm, 1.0f);
-    }
+    // Adjust to zero level
+    bjState.levelAdj = level - bjState.zeroLevel;
+
+    // Normalise to range 0.0 - 1.0.
+    bjState.levelNorm = static_cast< float >(bjState.levelAdj)
+                      / static_cast< float >(bjState.maxLevel - bjState.zeroLevel);
+    /*
+     * Invert the normalised output.
+     *
+     * NOTE: the distance sensor measures the air gap between itself and the top
+     * of the bell-jar: this means that its direct output is the inverse of the
+     * current bell-jar level. Consequently, we need to invert the range to
+     * obtain an in-phase signal for the regulator.
+     */
+    bjState.levelNorm = 1.0f - bjState.levelNorm;
 }
 
