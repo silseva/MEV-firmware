@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/SharedData.h"
+#include "common/PidController.h"
 
 enum class CtrlMode
 {
@@ -26,13 +26,18 @@ enum class CtrlMode
     AUTO = 1
 };
 
-struct StateData
+struct BjState
 {
-    CtrlMode mode;  ///<
-    float    sp;    ///<
-    float    level; ///<
-    float    uMan;  ///<
-    float    uAuto; ///<
+    CtrlMode      ctMode;           ///< Controller operating mode
+    PidParameters ctParams;         ///< Controller tuning parameters
+    float         ctSetPoint;       ///< Controller et point
+    float         ctOutput;         ///< Controller output
+    float         manOutput;        ///< Output value for manual mode
+
+    uint16_t      currLevelRaw;     ///< Raw value of BJ level in ADC counts
+    uint16_t      currLevelAdj;     ///< Adjusted value of BJ level w.r.t zero
+    float         currLevelNorm;    ///< Normalised value of BJ level in range 0.0 - 1.0
+    uint16_t      levelZero;        ///< Raw value in ADC counts correspoding to BJ zero level
 };
 
-using BjState = SharedData< StateData >;
+extern BjState bjState;
