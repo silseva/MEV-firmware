@@ -27,6 +27,12 @@
 struct PidParameters
 {
     /**
+     * Default constructor, initialise all fields to zero.
+     */
+    PidParameters() : k(0.0f), Ti(0.0f), Td(0.0f), N(0.0f), uMin(0.0f),
+                      uMax(0.0f), Tsample(0.0f) {}
+
+    /**
      * @param k: proportional term.
      * @param Ti: integral time.
      * @param Td: derivative time.
@@ -122,5 +128,3 @@ private:
     bool trackingEnabled;
     float utr;
 };
-
-#endif // PIDCONTROLLER_H
