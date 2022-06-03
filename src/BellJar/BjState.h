@@ -31,7 +31,7 @@ struct BjState
 {
     CtrlMode      ctMode;           ///< Controller operating mode
     PidParameters ctParams;         ///< Controller tuning parameters
-    float         ctSetPoint;       ///< Controller et point
+    float         ctSetPoint;       ///< Controller set point
     float         ctOutput;         ///< Controller output
     float         manOutput;        ///< Output value for manual mode
 

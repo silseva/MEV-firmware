@@ -43,8 +43,10 @@ FsmState *BjConfirmMan::update()
     Event event = InputHandler::instance().popEvent();
     if(cBox->handleEvent(event, fsm->dc))
     {
-        if(cBox->confirmed()) miosix::ledOn();
-        else miosix::ledOff();
+        if(cBox->confirmed())
+        {
+            bjState.ctMode = CtrlMode::MAN;
+        }
 
         return &fsm->mainPage;
     }

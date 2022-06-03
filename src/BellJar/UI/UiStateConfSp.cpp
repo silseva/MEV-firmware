@@ -37,7 +37,10 @@ void BjConfirmSp::enter()
     fsm->dc.clear(lightGrey);
 
     std::string text(20, '\0');
-    snprintf(&text[0], text.size(), "Confirm\nSP = %.2f?", fsm->kbInput);
+    snprintf(&text[0], text.size(), "Confirm\n%s = %.1f?",
+             (bjState.ctMode == CtrlMode::MAN) ? "OUT" : "SP",
+             fsm->kbInput);
+
     cBox->draw(fsm->dc, text);
 }
 
@@ -46,10 +49,23 @@ FsmState *BjConfirmSp::update()
     Event event = InputHandler::instance().popEvent();
     if(cBox->handleEvent(event, fsm->dc))
     {
-        bool isValid = (fsm->kbInput != numeric_limits< float >::quiet_NaN());
+        bool isValid =  (fsm->kbInput != numeric_limits< float >::quiet_NaN())
+                     && (fsm->kbInput <= 100.0f)
+                     && (fsm->kbInput >= 0.0f);
+
         if(cBox->confirmed() && isValid)
         {
+            // Set-point range is 0.0 - 1.0
+            float sp = fsm->kbInput / 100.0f;
 
+            if(bjState.ctMode == CtrlMode::MAN)
+            {
+                bjState.manOutput = sp;
+            }
+            else
+            {
+                bjState.ctSetPoint = sp;
+            }
         }
 
         fsm->kbInput = numeric_limits< float >::quiet_NaN();
