@@ -23,23 +23,26 @@
 using namespace mxgui;
 using namespace std;
 
-BjInputSp::BjInputSp(BjFsmData* fsm) : fsm(fsm)
+BjInputValue::BjInputValue(BjFsmData* fsm) : fsm(fsm)
 {
     int kb_x = (fsm->dc.getWidth()  - Keypad::getWidth())/2;
     int kb_y = (fsm->dc.getHeight() - Keypad::getHeight())/2;
     kb = make_unique< Keypad >(kb_x, kb_y);
 }
 
-BjInputSp::~BjInputSp(){ }
+BjInputValue::~BjInputValue()
+{
 
-void BjInputSp::enter()
+}
+
+void BjInputValue::enter()
 {
     fsm->dc.clear(lightGrey);
     kb->clear();
     kb->draw(fsm->dc);
 }
 
-FsmState *BjInputSp::update()
+FsmState *BjInputValue::update()
 {
     Event event = InputHandler::instance().popEvent();
     if(kb->handleEvent(event, fsm->dc))
@@ -54,6 +57,6 @@ FsmState *BjInputSp::update()
     return nullptr;
 }
 
-void BjInputSp::leave()
+void BjInputValue::leave()
 {
 }

@@ -22,10 +22,11 @@
 #include <limits>
 #include "BellJar/BjState.h"
 #include "UiStateMain.h"
-#include "UiStateSetSp.h"
+#include "UiStateInputVal.h"
 #include "UiStateConfAut.h"
 #include "UiStateConfMan.h"
 #include "UiStateConfSp.h"
+#include "UiStateConfig.h"
 
 class BjFsmData
 {
@@ -33,15 +34,16 @@ public:
 
     BjFsmData() : dc(mxgui::DisplayManager::instance().getDisplay()),
                   kbInput(std::numeric_limits< float >::quiet_NaN()),
-                  mainPage(this),   inputSp(this), confirmAut(this),
+                  mainPage(this),   inputVal(this),   confirmAut(this),
                   confirmMan(this), confirmSp(this) { }
 
     mxgui::DrawingContext dc;
     float kbInput;
 
     BjMainPage   mainPage;
-    BjInputSp    inputSp;
+    BjInputValue inputVal;
     BjConfirmAut confirmAut;
     BjConfirmMan confirmMan;
     BjConfirmSp  confirmSp;
+    BjConfig     config;
 };

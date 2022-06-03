@@ -26,7 +26,7 @@ class BjFsmData;
 /**
  * FSM state for Bell-Jar controller UI: set-point input.
  */
-class BjInputSp : public FsmState
+class BjInputValue : public FsmState
 {
 public:
 
@@ -34,12 +34,12 @@ public:
      * Constructor.
      * @param fsm: pointer to FSM data structure.
      */
-    BjInputSp(BjFsmData* fsm);
+    BjInputValue(BjFsmData* fsm);
 
     /**
      * Destructor.
      */
-    virtual ~BjInputSp();
+    virtual ~BjInputValue();
 
     /**
      * Function to be called on state enter.
