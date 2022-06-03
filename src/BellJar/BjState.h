@@ -18,9 +18,10 @@
 
 #pragma once
 
+#include <cstdint>
 #include "common/PidRegulator.h"
 
-enum class CtrlMode
+enum class CtrlMode : uint8_t
 {
     MAN  = 0,
     AUTO = 1

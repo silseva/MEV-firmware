@@ -20,6 +20,7 @@
 
 #include <mxgui/display.h>
 #include <limits>
+#include "BellJar/BjState.h"
 #include "UiStateMain.h"
 #include "UiStateSetSp.h"
 #include "UiStateConfAut.h"

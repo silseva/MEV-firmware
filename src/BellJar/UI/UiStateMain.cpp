@@ -18,16 +18,20 @@
 
 #include <mxgui/level2/input.h>
 #include <miosix.h>
+#include <cstring>
 #include "UiStateMain.h"
 #include "UiFsmData.h"
 
 using namespace mxgui;
 using namespace std;
 
-const vector< string > BjMainPage::paramLabels = {"Set point",
-                                                  "Level",
-                                                  "Control",
-                                                  "Mode"};
+const vector< string > BjMainPage::paramLabels =
+{
+    "Set point",
+    "Level",
+    "Control",
+    "Mode"
+};
 
 BjMainPage::BjMainPage(BjFsmData* fsm) : fsm(fsm)
 {
@@ -66,11 +70,50 @@ FsmState *BjMainPage::update()
     man->draw(fsm->dc);
     aut->draw(fsm->dc);
     set->draw(fsm->dc);
+    conf->draw(fsm->dc);
 
-    statusBox->setEntryValue(0, "99",   black);
-    statusBox->setEntryValue(1, "100",  black);
-    statusBox->setEntryValue(2, "30%",  black);
-    statusBox->setEntryValue(3, "AUTO", green);
+    char str[32];
+
+    // Print set-point value
+    if(bjState.ctMode == CtrlMode::AUTO)
+    {
+        snprintf(str, sizeof(str), "%d",
+                static_cast< int > (bjState.ctSetPoint * 100.0f));
+        statusBox->setEntryValue(0, str, black);
+    }
+    else
+    {
+        // Manual mode: set-point has no meaning, print an empty string
+        statusBox->setEntryValue(0, " ", black);
+    }
+
+    // Print current level value
+    snprintf(str, sizeof(str), "%d",
+             static_cast< int > (bjState.levelNorm * 100.0f));
+    statusBox->setEntryValue(1, str, black);
+
+    // Print current control value
+    snprintf(str, sizeof(str), "%d",
+             static_cast< int > (bjState.ctOutput * 100.0f));
+    statusBox->setEntryValue(2, str, black);
+
+    // Print current control status
+    switch(bjState.ctMode)
+    {
+        case CtrlMode::MAN:
+            statusBox->setEntryValue(3, "MAN", red);
+            break;
+
+        case CtrlMode::AUTO:
+            statusBox->setEntryValue(3, "AUTO", blue);
+            break;
+
+        default:
+            statusBox->setEntryValue(3, " ", black);
+            break;
+    }
+
+    // Finally, draw
     statusBox->draw(fsm->dc);
 
     if(manPressed) return &fsm->confirmMan;
@@ -87,7 +130,9 @@ void BjMainPage::leave()
     man->handleTouchEvent(event);
     aut->handleTouchEvent(event);
     set->handleTouchEvent(event);
+    conf->handleTouchEvent(event);
     man->draw(fsm->dc);
     aut->draw(fsm->dc);
     set->draw(fsm->dc);
+    conf->draw(fsm->dc);
 }
