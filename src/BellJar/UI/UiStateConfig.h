@@ -1,6 +1,6 @@
 /*
  * MEV board firmware
- * Copyright (C) 2021  Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2022  Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,42 @@
 
 class BjFsmData;
 
+class CfgEntry
+{
+public:
+
+    /**
+     *
+     */
+    CfgEntry(const mxgui::Point startPoint, const std::string& label,
+             float& refValue);
+
+    /**
+     *
+     */
+    ~CfgEntry();
+
+    /**
+     *
+     */
+    bool update(mxgui::Event& e, mxgui::DrawingContext& dc);
+
+private:
+
+    static constexpr int spacing   = 15;
+    static constexpr int btnWidth  = 50;
+    static constexpr int btnHeight = 30;
+
+    mxgui::Point      startPoint;
+    mxgui::Point      textPoint;
+    const std::string label;
+    float&            value;
+};
+
 /**
- * FSM state for Bell-Jar controller UI: main view.
+ * FSM state for Bell-Jar controller UI: configurations page.
  */
-class BjMainPage : public FsmState
+class BjConfig : public FsmState
 {
 public:
 
@@ -35,12 +67,12 @@ public:
      * Constructor.
      * @param fsm: pointer to FSM data structure.
      */
-    BjMainPage(BjFsmData* fsm);
+    BjConfig(BjFsmData* fsm);
 
     /**
      * Destructor.
      */
-    virtual ~BjMainPage();
+    virtual ~BjConfig();
 
     /**
      * Function to be called on state enter.
@@ -61,21 +93,16 @@ public:
 
 private:
 
-    static constexpr unsigned int leftMargin = 10;
-    static constexpr unsigned int topMargin  = 30;
-    static constexpr unsigned int btnSpace   = 20;
-    static constexpr unsigned int btnHeight  = 40;
-    static constexpr unsigned int sbHeight   = 130;
-    static constexpr mxgui::Color sbBgColor  = mxgui::white;
-    static constexpr mxgui::Color sbLabColor = mxgui::black;
-    static constexpr mxgui::Color uiBkgColor = mxgui::grey;
+    static constexpr unsigned int spacing   = 10;
+    static constexpr unsigned int btnSpace  = 20;
+    static constexpr unsigned int btnWidth  = 30;
+    static constexpr unsigned int btnHeight = 30;
 
-    static const std::vector< std::string > paramLabels;
-    std::unique_ptr< DisplayBox > statusBox;
-    std::unique_ptr< Button >     man;
-    std::unique_ptr< Button >     aut;
-    std::unique_ptr< Button >     set;
-    std::unique_ptr< Button >     conf;
+    int valueToChange;
+    std::vector< std::unique_ptr< CfgEntry > > entries;
+    std::unique_ptr< Button > ret;
+    std::unique_ptr< Button > max;
+    std::unique_ptr< Button > zero;
 
     BjFsmData* fsm;
 };

@@ -35,10 +35,11 @@ public:
     BjFsmData() : dc(mxgui::DisplayManager::instance().getDisplay()),
                   kbInput(std::numeric_limits< float >::quiet_NaN()),
                   mainPage(this),   inputVal(this),   confirmAut(this),
-                  confirmMan(this), confirmSp(this) { }
+                  confirmMan(this), confirmSp(this), config(this) { }
 
     mxgui::DrawingContext dc;
     float kbInput;
+    FsmState *prevState;
 
     BjMainPage   mainPage;
     BjInputValue inputVal;

@@ -52,6 +52,10 @@ BjMainPage::BjMainPage(BjFsmData* fsm) : fsm(fsm)
     Point spStart(man->getUpperLeftCorner().x(),
                   man->getLowerRightCorner().y() + btnSpace);
     set = make_unique< Button >(spStart, btnWidth, btnHeight, "Set", droid21);
+
+    Point configStart(aut->getUpperLeftCorner().x(),
+                      set->getUpperLeftCorner().y());
+    conf = make_unique< Button >(configStart, btnWidth, btnHeight, "Config", droid21);
 }
 
 BjMainPage::~BjMainPage() { }
@@ -67,6 +71,7 @@ FsmState *BjMainPage::update()
     bool manPressed = man->handleTouchEvent(event);
     bool autPressed = aut->handleTouchEvent(event);
     bool setPressed = set->handleTouchEvent(event);
+    bool cnfPressed = conf->handleTouchEvent(event);
     man->draw(fsm->dc);
     aut->draw(fsm->dc);
     set->draw(fsm->dc);
@@ -118,7 +123,14 @@ FsmState *BjMainPage::update()
 
     if(manPressed) return &fsm->confirmMan;
     if(autPressed) return &fsm->confirmAut;
-    if(setPressed) return &fsm->inputSp;
+    if(setPressed)
+    {
+        fsm->prevState = this;
+        return &fsm->inputVal;
+    }
+
+    if(cnfPressed) return &fsm->config;
+
     return nullptr;
 }
 

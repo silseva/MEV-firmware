@@ -44,19 +44,27 @@ void BjInputValue::enter()
 
 FsmState *BjInputValue::update()
 {
-    Event event = InputHandler::instance().popEvent();
+    Event     event    = InputHandler::instance().popEvent();
+    FsmState *nxtState = nullptr;
+
     if(kb->handleEvent(event, fsm->dc))
     {
         fsm->kbInput = kb->getNumber();
+        nxtState     = fsm->prevState;
+
         if(fsm->kbInput != numeric_limits< float >::quiet_NaN())
-            return &fsm->confirmSp;
-        else
-            return &fsm->mainPage;
+        {
+            if(fsm->prevState == (&fsm->mainPage))
+            {
+                nxtState = &fsm->confirmSp;
+            }
+        }
     }
 
-    return nullptr;
+    return nxtState;
 }
 
 void BjInputValue::leave()
 {
+
 }

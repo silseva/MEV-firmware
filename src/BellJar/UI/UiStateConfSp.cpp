@@ -68,7 +68,9 @@ FsmState *BjConfirmSp::update()
             }
         }
 
-        fsm->kbInput = numeric_limits< float >::quiet_NaN();
+        fsm->kbInput   = numeric_limits< float >::quiet_NaN();
+        fsm->prevState = nullptr;
+
         return &fsm->mainPage;
     }
 
