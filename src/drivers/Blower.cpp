@@ -69,5 +69,7 @@ void Blower::setValue(const float u)
 {
     // 10-bit DAC, maximum value is 1023
     float dacValue = std::max(std::min(u, uMax()), uMin()) * 1023.0f;
-    TIM3->CCR3     = static_cast< uint16_t >(dacValue);
+
+    // The PWM output stage is inverting: invert PWM polarity to compensate this.
+    TIM3->CCR3 = 0x3FF - static_cast< uint16_t >(dacValue);
 }
