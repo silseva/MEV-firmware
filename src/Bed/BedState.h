@@ -32,6 +32,9 @@ struct StateData
     float press_2;
     float flow_1;
     float flow_2;
+    float volume_1;
+    float volume_2;
+    bool  resetVolumes;
 };
 
 extern StateData state;

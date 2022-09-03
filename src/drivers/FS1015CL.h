@@ -53,7 +53,7 @@ public:
      */
     float getFlowRate()
     {
-        float voltage = adc.getValue(CH);
+        float voltage = adc.getVoltage(CH);
 
         // ADC failure
         if(voltage == std::numeric_limits< float >::signaling_NaN())

@@ -101,6 +101,7 @@ uint16_t ADC122S021::getRawValue(const AdcChannel channel)
 
     // Flush data register and reset RXNE flag.
     (void) SPI4->DR;
+    SPI4->SR &= ~SPI_SR_RXNE;
 
     // Get a sample of the channel voltage.
     t = getTick();

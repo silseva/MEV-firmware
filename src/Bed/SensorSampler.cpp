@@ -43,27 +43,43 @@ void SensorSampler::run()
 
     while(!should_stop)
     {
+        // Time step for measurements update, in milliseconds.
+        // Default to 1Hz if no sampling frequency is specified.
+        uint32_t updateStep = 1000;
+        if(state.Fsample > 0)
+        {
+            updateStep = 1000 / static_cast< uint32_t >(state.Fsample);
+        }
+
+
         state.press_1 = press1.getPressure();
         state.press_2 = press2.getPressure();
         state.flow_1  = flow1.getFlowRate();
         state.flow_2  = flow2.getFlowRate();
 
+        // Flow rate is in l/min while update step is in ms, hence we have to
+        // divide the flow rate by 60 s/min * 1000 ms/s.
+        state.volume_1 += (state.flow_1 / 60000.0f)
+                        * static_cast< float > (updateStep);
+
+        state.volume_2 += (state.flow_2 / 60000.0f)
+                        * static_cast< float > (updateStep);
+
+        if(state.resetVolumes)
+        {
+            state.volume_1 = 0.0f;
+            state.volume_2 = 0.0f;
+            state.resetVolumes = false;
+        }
+
         #ifdef SAMPLER_PRINT
-        printf("%.3f,%.3f,%.3f,%.3f,%d,%d\n", state.press_1, state.press_2,
-                                              state.flow_1,  state.flow_2,
+        printf("%.3f,%.3f,%.3f,%.3f,%.3f,%.3f, %d,%d\n",
+                                              state.press_1,  state.press_2,
+                                              state.flow_1,   state.flow_2,
+                                              state.volume_1, state.volume_2,
                                               hpOutputs::out_1::value(),
                                               hpOutputs::out_2::value());
         #endif
-
-        // If sampling frequency is set to 0Hz, default to 1Hz
-        if(state.Fsample > 0)
-        {
-            time += 1000 / static_cast< uint32_t >(state.Fsample);
-        }
-        else
-        {
-            time += 1000;
-        }
 
         Thread::sleepUntil(time);
     }
