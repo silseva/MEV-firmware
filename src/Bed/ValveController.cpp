@@ -23,7 +23,7 @@
 using namespace std;
 using namespace miosix;
 
-ValveController::ValveController(const StateData& state) : state(state)
+ValveController::ValveController(StateData& state) : state(state)
 {
     hpOutputs::out_1::mode(Mode::OUTPUT);
     hpOutputs::out_2::mode(Mode::OUTPUT);
@@ -50,10 +50,12 @@ void ValveController::run()
                                                                * 1000.0f);
 
             // Force EV1 and EV2 to closed state, wait 50ms to compensate for
-            // valve closing time.
+            // valve closing time. Reset inh/exh. volume measurements before a
+            // new cycle begins.
             hpOutputs::out_1::low();
             hpOutputs::out_2::low();
             Thread::sleep(50);
+            state.resetVolumes = true;
 
             // Open EV1
             hpOutputs::out_1::high();

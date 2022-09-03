@@ -25,7 +25,7 @@ using namespace mxgui;
 using namespace std;
 
 const vector< string > BedMainPage::paramLabels = {"Pressure",
-                                                   "Flow",
+                                                   "Volume",
                                                    "Ti/Ratio",
                                                    "Status"};
 
@@ -92,8 +92,8 @@ FsmState *BedMainPage::update()
     statusBox->setEntryValue(0, text,  black);
 
     // Update flow rate indicator
-    snprintf(text, sizeof(text), "%03.2f  %03.2f", fsm->state.flow_1,
-                                                   fsm->state.flow_2);
+    snprintf(text, sizeof(text), "%02.2f  %02.2f", fsm->state.volume_1,
+                                                   fsm->state.volume_2);
     statusBox->setEntryValue(1, text,  black);
 
     // Update Ti/Ratio indicator

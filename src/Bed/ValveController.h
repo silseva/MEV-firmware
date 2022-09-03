@@ -31,7 +31,7 @@ public:
      * Constructor.
      * @param fsm: pointer to FSM data structure.
      */
-    ValveController(const StateData& state);
+    ValveController(StateData& state);
 
     /**
      * Destructor.
@@ -45,5 +45,5 @@ public:
 
 private:
 
-    const StateData& state;
+    StateData& state;
 };
