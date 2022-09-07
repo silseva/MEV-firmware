@@ -18,8 +18,14 @@
 
 #pragma once
 
-#include <miosix.h>
 #include <util/software_i2c.h>
+#include <miosix.h>
+
+#ifdef BJ_BOARD
+
+//
+// I/O mapping for Bell Jar controller board
+//
 
 namespace adc
 {
@@ -58,3 +64,40 @@ namespace rs485
     using rxd = miosix::Gpio<GPIOD_BASE, 2>;
     using te  = miosix::Gpio<GPIOC_BASE, 11>;
 }
+
+#else
+
+//
+// I/O mapping for bed controller board
+//
+
+namespace adc
+{
+    using muxs = miosix::Gpio<GPIOC_BASE, 3>;
+    using cs   = miosix::Gpio<GPIOE_BASE, 3>;
+    using sck  = miosix::Gpio<GPIOE_BASE, 2>;
+    using miso = miosix::Gpio<GPIOE_BASE, 5>;
+    using mosi = miosix::Gpio<GPIOE_BASE, 6>;
+}
+
+namespace i2c
+{
+    using sda_1 = miosix::Gpio<GPIOD_BASE, 4>;
+    using scl_1 = miosix::Gpio<GPIOD_BASE, 5>;
+    using i2c_1 = miosix::SoftwareI2C<sda_1, scl_1>;
+}
+
+namespace hpOutputs
+{
+    using out_1 = miosix::Gpio<GPIOF_BASE, 6>;
+    using out_2 = miosix::Gpio<GPIOB_BASE, 2>;
+}
+
+namespace rs485
+{
+    using txd = miosix::Gpio<GPIOC_BASE, 12>;
+    using rxd = miosix::Gpio<GPIOD_BASE, 2>;
+    using te  = miosix::Gpio<GPIOC_BASE, 11>;
+}
+
+#endif
