@@ -72,6 +72,12 @@ ADC122S021::ADC122S021()
               | SPI_CR1_MSTR;   // Master mode
 
     SPI4->CR1 |= SPI_CR1_SPE;   // Enable peripheral
+
+    // Default values for conversion offset and slope
+    CH_OFFSET[0] = 0.0f;
+    CH_OFFSET[1] = 0.0f;
+    CH_SLOPE[0]  = 4096.0f/5.0f;
+    CH_SLOPE[1]  = 4096.0f/5.0f;
 }
 
 ADC122S021::~ADC122S021()
@@ -119,6 +125,17 @@ uint16_t ADC122S021::getRawValue(const AdcChannel channel)
 
 float ADC122S021::getVoltage(const AdcChannel channel)
 {
-    uint16_t value = getRawValue(channel);
-    return (static_cast< float >(value) * 5.0f) / 4096.0f;
+    float value = static_cast< float >(getRawValue(channel));
+    uint16_t ch = static_cast< uint16_t >(channel);
+
+    if(value < CH_OFFSET[ch]) return 0.0f;
+    return (value - CH_OFFSET[ch]) / CH_SLOPE[ch];
+}
+
+void ADC122S021::setConversionParameters(const AdcChannel channel,
+                                         const float slope, const float offset)
+{
+    uint16_t ch   = static_cast< uint16_t >(channel);
+    CH_SLOPE[ch]  = slope;
+    CH_OFFSET[ch] = offset;
 }

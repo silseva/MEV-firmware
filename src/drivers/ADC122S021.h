@@ -68,6 +68,16 @@ public:
     float getVoltage(const AdcChannel channel);
 
     /**
+     * Set values for conversion offset and slope of a specific channel.
+     *
+     * @param channel: channel number.
+     * @param slope: conversion slope, in counts/V.
+     * @param offset: conversion offset, in counts.
+     */
+    void setConversionParameters(const AdcChannel channel, const float slope,
+                                 const float offset);
+
+    /**
      * Copy constructor, deleted as this class is singleton.
      */
     ADC122S021(const ADC122S021& other) = delete;
@@ -96,4 +106,6 @@ private:
      */
     ADC122S021();
 
+    float CH_OFFSET[2];    ///< Channels' conversion offset
+    float CH_SLOPE[2];     ///< Channels' conversion slope
 };
