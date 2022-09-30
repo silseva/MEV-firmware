@@ -18,13 +18,14 @@ int main()
 {
     memset(&bjState, 0x00, sizeof(BjState));
 
-    bjState.ctParams.uMin    = 0.0;
-    bjState.ctParams.uMax    = 1.0;
-    bjState.ctParams.k       = 1.0;
-    bjState.ctParams.Ti      = 0.5;
-    bjState.ctParams.Tsample = 0.5;
-    bjState.ctMode           = CtrlMode::AUTO;
-    bjState.ctSetPoint       = 0.3;
+    bjState.ctParams.uMin    = 0.0f;
+    bjState.ctParams.uMax    = 1.0f;
+    bjState.ctParams.k       = 1.0f;
+    bjState.ctParams.Ti      = 0.5f;
+    bjState.ctParams.Tsample = 0.5f;
+    bjState.ctMode           = CtrlMode::MAN;
+    bjState.ctSetPoint       = 0.0f;
+    bjState.manOutput        = 0.0f;
 
     bjState.zeroLevel = 0;
     bjState.maxLevel  = 4095;
