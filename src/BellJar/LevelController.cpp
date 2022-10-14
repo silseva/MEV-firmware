@@ -27,7 +27,21 @@ LevelController::LevelController() : adc(ADC122S021::instance()),
                                      blower(Blower::instance()),
                                      pid(bjState.ctParams), rMode(bjState.ctMode)
 {
+    switch(rMode)
+    {
+        case CtrlMode::MAN:
+            pid.enableTracking();
+            break;
 
+        case CtrlMode::AUTO:
+            pid.disableTracking();
+            break;
+
+        default:
+            // UH-OH!
+            assert(false);
+            break;
+    }
 }
 
 LevelController::~LevelController()
