@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <mxgui/level2/input.h>
-#include <miosix.h>
+#include <level2/input.h>
 #include <cstring>
+#include <memory>
 #include "UiStateMain.h"
 #include "UiFsmData.h"
 

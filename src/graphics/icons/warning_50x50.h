@@ -4,7 +4,7 @@
 #ifndef WARNING_50X50_H
 #define WARNING_50X50_H
 
-#include "mxgui/image.h"
+#include <image.h>
 
 extern const mxgui::Image warning_50x50;
 

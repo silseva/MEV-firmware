@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <miosix.h>
+#include <memory>
 #include "UiStateConfMan.h"
 #include "UiFsmData.h"
 

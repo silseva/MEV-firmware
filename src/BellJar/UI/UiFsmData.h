@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <mxgui/display.h>
+#include <display.h>
 #include <limits>
 #include "BellJar/BjState.h"
 #include "UiStateMain.h"
