@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include <display.h>
 #include <limits>
+#include <mxgui/display.h>
 #include "BellJar/BjState.h"
 #include "UiStateMain.h"
 #include "UiStateInputVal.h"

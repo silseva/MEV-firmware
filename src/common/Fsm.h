@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <drivers/display_stm32.h>
 #include <miosix.h>
 #include <memory>
 #include "ActiveObject.h"
@@ -100,6 +101,9 @@ private:
             }
 
             FsmState *nxtState = curState->update();
+            #ifdef BJ_BOARD
+            DisplayStm32::instance().render();
+            #endif
             if(nxtState != nullptr)
             {
                 curState->leave();
