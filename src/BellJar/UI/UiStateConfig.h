@@ -24,38 +24,6 @@
 
 class BjFsmData;
 
-class CfgEntry
-{
-public:
-
-    /**
-     *
-     */
-    CfgEntry(const mxgui::Point startPoint, const std::string& label,
-             float& refValue);
-
-    /**
-     *
-     */
-    ~CfgEntry();
-
-    /**
-     *
-     */
-    bool update(mxgui::Event& e, mxgui::DrawingContext& dc);
-
-private:
-
-    static constexpr int spacing   = 15;
-    static constexpr int btnWidth  = 50;
-    static constexpr int btnHeight = 30;
-
-    mxgui::Point      startPoint;
-    mxgui::Point      textPoint;
-    const std::string label;
-    float&            value;
-};
-
 /**
  * FSM state for Bell-Jar controller UI: configurations page.
  */
@@ -99,7 +67,7 @@ private:
     static constexpr unsigned int btnHeight = 30;
 
     int valueToChange;
-    std::vector< std::unique_ptr< CfgEntry > > entries;
+    std::vector< std::unique_ptr< CfgEntry< float > > > entries;
     std::unique_ptr< Button > ret;
     std::unique_ptr< Button > max;
     std::unique_ptr< Button > zero;

@@ -31,6 +31,7 @@
 #include "DisplayBox.h"
 #include "ConfirmBox.h"
 #include "Rectangle.h"
+#include "CfgEntry.h"
 #include "TextBox.h"
 #include "Button.h"
 #include "Keypad.h"
