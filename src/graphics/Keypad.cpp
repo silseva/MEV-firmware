@@ -63,7 +63,7 @@ Keypad::Keypad (const mxgui::Point p) :
         }
 
         y += btnHeight + btnSpacing;
-        x = 20;
+        x  = textBox.getUpperLeftCorner().x();
     }
 
     // Finally, clear the input buffer
