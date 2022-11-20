@@ -8,6 +8,7 @@
 #include "BellJar/UI/UiFsmData.h"
 #include "BellJar/LevelController.h"
 #include "BellJar/BjState.h"
+#include "BellJar/settings.h"
 
 using namespace std;
 using namespace mxgui;
@@ -16,19 +17,22 @@ BjState bjState;
 
 int main()
 {
-    memset(&bjState, 0x00, sizeof(BjState));
+    if(loadParamsFromFlash(bjState.ctParams) == false)
+    {
+        // Loading saved parameters went wrong, initialize them to safe values
+        bjState.ctParams.uMin    = 0.0f;
+        bjState.ctParams.uMax    = 1.0f;
+        bjState.ctParams.k       = 0.0f;
+        bjState.ctParams.Ti      = 0.0f;
+        bjState.ctParams.Tsample = 0.0f;
+    }
 
-    bjState.ctParams.uMin    = 0.0f;
-    bjState.ctParams.uMax    = 1.0f;
-    bjState.ctParams.k       = 1.0f;
-    bjState.ctParams.Ti      = 0.5f;
-    bjState.ctParams.Tsample = 0.5f;
-    bjState.ctMode           = CtrlMode::MAN;
-    bjState.ctSetPoint       = 0.0f;
-    bjState.manOutput        = 0.0f;
-
-    bjState.zeroLevel = 0;
-    bjState.maxLevel  = 4095;
+    // Initialize all the other non-persistent parameters
+    bjState.ctMode     = CtrlMode::MAN;
+    bjState.ctSetPoint = 0.0f;
+    bjState.manOutput  = 0.0f;
+    bjState.zeroLevel  = 0;
+    bjState.maxLevel   = 4095;
 
     LevelController lc;
     lc.start();

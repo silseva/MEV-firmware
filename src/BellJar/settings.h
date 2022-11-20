@@ -18,28 +18,22 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <cstddef>
+#include <cstdint>
+#include <common/PidRegulator.h>
 
 /**
- * Driver for MCU's internal flash management, allowing for sector erase and data
- * writing.
- */
-
-/**
- * Erase one sector of the MCU flash memory.
+ * Load PID configuration parameters from the internal flash memory.
  *
- * @param secNum: sector number.
- * @return true for successful erase, false otherwise.
+ * @param params: reference to the PidParameters data structure to be filled
+ * with saved data.
+ * @return true on success, false in case of corrupted data or non-initialized
+ * flash storage.
  */
-bool flash_eraseSector(const uint8_t secNum);
+bool loadParamsFromFlash(PidParameters& params);
 
 /**
- * Write data to the MCU flash memory.
+ * Save PID configuration parameters to the internal flash memory.
  *
- * @param address: starting address for the write operation.
- * @param data: data to be written.
- * @param len: data length.
+ * @param params: data to be saved.
  */
-void flash_write(const uint32_t address, const void *data, const size_t len);
+void saveParamsToFlash(const PidParameters& params);

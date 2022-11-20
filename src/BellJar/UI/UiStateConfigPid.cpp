@@ -18,6 +18,7 @@
 
 #include <array>
 #include <memory>
+#include <BellJar/settings.h>
 #include "UiStateConfigPid.h"
 #include "UiFsmData.h"
 
@@ -114,7 +115,11 @@ FsmState *BjConfigPid::update()
     bool retPressed  = ret->handleTouchEvent(event);
     ret->draw(fsm->dc);
 
-    if(retPressed) nxtState = &fsm->setupInput;
+    if(retPressed)
+    {
+        saveParamsToFlash(bjState.ctParams);
+        nxtState = &fsm->setupInput;
+    }
 
     return nxtState;
 }
