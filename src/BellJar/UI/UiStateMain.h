@@ -63,7 +63,7 @@ private:
 
     static constexpr unsigned int leftMargin = 10;
     static constexpr unsigned int topMargin  = 30;
-    static constexpr unsigned int btnSpace   = 20;
+    static constexpr unsigned int btnSpace   = 10;
     static constexpr unsigned int btnHeight  = 40;
     static constexpr unsigned int sbHeight   = 130;
     static constexpr mxgui::Color sbBgColor  = mxgui::white;

@@ -41,7 +41,7 @@ BjMainPage::BjMainPage(BjFsmData* fsm) : fsm(fsm)
                                           sbBgColor, sbLabColor, droid21b);
 
     unsigned int btnWidth = (fsm->dc.getWidth() - (2*leftMargin + btnSpace))/2;
-    Point manStart(leftMargin, fsm->dc.getHeight()/2);
+    Point manStart(leftMargin, statusBox->getLowerRightCorner().y() + btnSpace);
     man = make_unique< Button >(manStart, btnWidth, btnHeight, "Manual",
                                 droid21);
 
