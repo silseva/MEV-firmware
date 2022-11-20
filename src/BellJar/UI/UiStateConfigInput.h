@@ -25,9 +25,9 @@
 class BjFsmData;
 
 /**
- * FSM state for Bell-Jar controller UI: configurations page.
+ * FSM state for Bell-Jar controller UI: input configurations page.
  */
-class BjConfig : public FsmState
+class BjConfigInput : public FsmState
 {
 public:
 
@@ -35,12 +35,12 @@ public:
      * Constructor.
      * @param fsm: pointer to FSM data structure.
      */
-    BjConfig(BjFsmData* fsm);
+    BjConfigInput(BjFsmData* fsm);
 
     /**
      * Destructor.
      */
-    virtual ~BjConfig();
+    virtual ~BjConfigInput();
 
     /**
      * Function to be called on state enter.
@@ -61,16 +61,17 @@ public:
 
 private:
 
-    static constexpr unsigned int spacing   = 10;
+    static constexpr unsigned int spacing   = 15;
     static constexpr unsigned int btnSpace  = 20;
     static constexpr unsigned int btnWidth  = 30;
     static constexpr unsigned int btnHeight = 30;
 
-    int valueToChange;
-    std::vector< std::unique_ptr< CfgEntry< float > > > entries;
-    std::unique_ptr< Button > ret;
-    std::unique_ptr< Button > max;
+    static const std::vector< std::string > labels;
+    std::unique_ptr< DisplayBox > levels;
     std::unique_ptr< Button > zero;
+    std::unique_ptr< Button > max;
+    std::unique_ptr< Button > ret;
+    std::unique_ptr< Button > nxt;
 
     BjFsmData* fsm;
 };

@@ -129,7 +129,7 @@ FsmState *BjMainPage::update()
         return &fsm->inputVal;
     }
 
-    if(cnfPressed) return &fsm->config;
+    if(cnfPressed) return &fsm->setupInput;
 
     return nullptr;
 }

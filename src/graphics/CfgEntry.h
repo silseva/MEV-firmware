@@ -48,10 +48,12 @@ public:
                       - spacing
                       - btnWidth;
 
+        int textOffset = (btnHeight - droid21.getHeight()) / 2;
+
         mxgui::Point btnPoint(startPoint.x() + btnOffset, startPoint.y());
         mxgui::Point lblPoint(startPoint.x() + spacing,
-                              startPoint.y() + (droid21.getHeight() / 2));
-        mxgui::Point txtPoint(lblPoint.x() + 3*spacing, lblPoint.y());
+                              startPoint.y() + textOffset);
+        mxgui::Point txtPoint(lblPoint.x() + 6*spacing, lblPoint.y());
 
         char text[32];
         toText(text, sizeof(text), value);

@@ -18,60 +18,51 @@
 
 #include <array>
 #include <memory>
-#include "UiStateConfig.h"
+#include "UiStateConfigPid.h"
 #include "UiFsmData.h"
 
 using namespace mxgui;
 using namespace std;
 
-BjConfig::BjConfig(BjFsmData* fsm) : valueToChange(-1), fsm(fsm)
+BjConfigPid::BjConfigPid(BjFsmData* fsm) : valueToChange(-1), fsm(fsm)
 {
     int x = 0;
     int y = spacing;
     entries.push_back( make_unique < CfgEntry< float > >(Point(x, y), "Kp",
                                                          bjState.ctParams.k));
-    y += 40;
+    y += 38;
     entries.push_back( make_unique < CfgEntry< float > >(Point(x, y), "Ti",
                                                          bjState.ctParams.Ti));
-    y += 40;
+    y += 38;
     entries.push_back( make_unique < CfgEntry< float > >(Point(x, y), "Td",
                                                          bjState.ctParams.Td));
-    y += 40;
+    y += 38;
     entries.push_back( make_unique < CfgEntry< float > >(Point(x, y), "N",
                                                          bjState.ctParams.N));
-    y += 40;
+    y += 38;
     entries.push_back( make_unique < CfgEntry< float > >(Point(x, y), "Ts",
                                                          bjState.ctParams.Tsample));
     entries.shrink_to_fit();
 
     unsigned int bWidth = (fsm->dc.getWidth() - (2*spacing + btnSpace))/2;
     unsigned int bx = spacing;
-    unsigned int by = y + 60;
+    unsigned int by = fsm->dc.getHeight() - spacing - btnHeight;
 
-    zero = make_unique< Button >(Point(bx, by), bWidth, btnHeight, "Zero",
-                                droid21);
-
-    unsigned int offset = fsm->dc.getWidth() - 2*bWidth - 2*spacing;
-    bx = zero->getLowerRightCorner().x() + offset;
-    max = make_unique< Button >(Point(bx, by), bWidth,
-                                btnHeight, "Max", droid21);
-
-    by = fsm->dc.getHeight() - spacing - btnHeight;
-    ret  = make_unique< Button >(Point(bx, by), bWidth, btnHeight, "Back",
+    ret = make_unique< Button >(Point(bx, by), bWidth, btnHeight, "Back",
                                  droid21);
 }
 
-BjConfig::~BjConfig()
+BjConfigPid::~BjConfigPid()
 {
 
 }
 
-void BjConfig::enter()
+void BjConfigPid::enter()
 {
     fsm->dc.clear(lightGrey);
 }
 
-FsmState *BjConfig::update()
+FsmState *BjConfigPid::update()
 {
     if(valueToChange >= 0)
     {
@@ -121,20 +112,14 @@ FsmState *BjConfig::update()
     }
 
     bool retPressed  = ret->handleTouchEvent(event);
-    bool maxPressed  = max->handleTouchEvent(event);
-    bool zeroPressed = zero->handleTouchEvent(event);
     ret->draw(fsm->dc);
-    max->draw(fsm->dc);
-    zero->draw(fsm->dc);
 
-    if(retPressed)  nxtState = &fsm->mainPage;
-    if(maxPressed)  bjState.maxLevel  = bjState.levelRaw;
-    if(zeroPressed) bjState.zeroLevel = bjState.levelRaw;
+    if(retPressed) nxtState = &fsm->setupInput;
 
     return nxtState;
 }
 
-void BjConfig::leave()
+void BjConfigPid::leave()
 {
 
 }

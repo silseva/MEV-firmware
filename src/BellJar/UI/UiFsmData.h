@@ -26,7 +26,8 @@
 #include "UiStateConfAut.h"
 #include "UiStateConfMan.h"
 #include "UiStateConfSp.h"
-#include "UiStateConfig.h"
+#include "UiStateConfigPid.h"
+#include "UiStateConfigInput.h"
 
 class BjFsmData
 {
@@ -35,16 +36,18 @@ public:
     BjFsmData() : dc(mxgui::DisplayManager::instance().getDisplay()),
                   kbInput(std::numeric_limits< float >::quiet_NaN()),
                   mainPage(this),   inputVal(this),   confirmAut(this),
-                  confirmMan(this), confirmSp(this), config(this) { }
+                  confirmMan(this), confirmSp(this), setupPid(this),
+                  setupInput(this) { }
 
     mxgui::DrawingContext dc;
     float kbInput;
     FsmState *prevState;
 
-    BjMainPage   mainPage;
-    BjInputValue inputVal;
-    BjConfirmAut confirmAut;
-    BjConfirmMan confirmMan;
-    BjConfirmSp  confirmSp;
-    BjConfig     config;
+    BjMainPage    mainPage;
+    BjInputValue  inputVal;
+    BjConfirmAut  confirmAut;
+    BjConfirmMan  confirmMan;
+    BjConfirmSp   confirmSp;
+    BjConfigPid   setupPid;
+    BjConfigInput setupInput;
 };
