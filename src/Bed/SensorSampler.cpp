@@ -25,11 +25,9 @@
 using namespace std;
 using namespace miosix;
 
-SensorSampler::SensorSampler() : adc(ADC122S021::instance()),
-                                 flow1(adc), flow2(adc)
+SensorSampler::SensorSampler() : sensors(AnalogSensors::instance())
 {
-    i2c::i2c_1::init();
-    i2c::i2c_2::init();
+
 }
 
 SensorSampler::~SensorSampler()
@@ -52,10 +50,10 @@ void SensorSampler::run()
         }
 
 
-        state.press_1 = press1.getPressure();
-        state.press_2 = press2.getPressure();
-        state.flow_1  = flow1.getFlowRate();
-        state.flow_2  = flow2.getFlowRate();
+        state.press_1 = sensors.getValue(Sensor::PRESS_1);
+        state.press_2 = sensors.getValue(Sensor::PRESS_2);
+        state.flow_1  = sensors.getValue(Sensor::FLOW_1);
+        state.flow_2  = sensors.getValue(Sensor::FLOW_2);
 
         // Flow rate is in l/min while update step is in ms, hence we have to
         // divide the flow rate by 60 s/min * 1000 ms/s.

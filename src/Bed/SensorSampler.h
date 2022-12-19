@@ -23,6 +23,7 @@
 #include "drivers/ADC122S021.h"
 #include "drivers/FSP2000.h"
 #include "drivers/FS1015CL.h"
+#include "AnalogSensors.h"
 
 /**
  * Sensor sampler class for collecting all the measurements, active object.
@@ -49,12 +50,5 @@ private:
      */
     virtual void run() override;
 
-
-    ADC122S021& adc;                    ///< ADC driver.
-
-    FS1015CL < AdcChannel::_1 > flow1;  ///< First flow sensor.
-    FS1015CL < AdcChannel::_2 > flow2;  ///< Second flow sensor.
-
-    FSP2000< i2c::i2c_1 > press1;       ///< First pressure sensor.
-    FSP2000< i2c::i2c_2 > press2;       ///< Second pressure sensor.
+    AnalogSensors& sensors;  ///< Analog sensors manager
 };
