@@ -101,9 +101,7 @@ private:
             }
 
             FsmState *nxtState = curState->update();
-            #ifdef BJ_BOARD
             DisplayStm32::instance().render();
-            #endif
             if(nxtState != nullptr)
             {
                 curState->leave();
