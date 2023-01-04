@@ -39,7 +39,7 @@ public:
      * @param adc: instance of the ADC122S021 driver used to sample sensor's
      * analog outuput.
      */
-    FS1015CL(ADC122S021& adc) : adc(adc) { }
+    FS1015CL(ADC122S021& adc) : OFFSET(0.5f), SLOPE(25.0f), adc(adc) { }
 
     /**
      * Destructor.
@@ -71,9 +71,21 @@ public:
         return (voltage - OFFSET) * SLOPE;
     }
 
+    /**
+     * Set sensor's output characteristic parameters.
+     *
+     * @param offset: output offset at 0 SLPM, in volt.
+     * @param slope: output slope in SLPM/volt
+     */
+    void setOutputParameters(const float offset, const float slope)
+    {
+        OFFSET = offset;
+        SLOPE  = slope;
+    }
+
 private:
 
-    static constexpr float OFFSET = 0.5f;   ///< Output offset at 0 SLPM, in volt
-    static constexpr float SLOPE  = 25.0f;  ///< Output slope in SLPM/volt
-    ADC122S021& adc;                        ///< ADC instance
+    float OFFSET;       ///< Output offset at 0 SLPM, in volt
+    float SLOPE;        ///< Output slope in SLPM/volt
+    ADC122S021& adc;    ///< ADC instance
 };

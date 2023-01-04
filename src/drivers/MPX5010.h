@@ -78,6 +78,18 @@ public:
         SLOPE  = 1000.0f / (0.09f * vSupply);
     }
 
+    /**
+     * Set sensor's output characteristic parameters.
+     *
+     * @param offset: output offset at 0 SLPM, in volt.
+     * @param slope: output slope in SLPM/volt
+     */
+    void setOutputParameters(const float offset, const float slope)
+    {
+        OFFSET = offset;
+        SLOPE  = slope;
+    }
+
 private:
 
     float OFFSET;       ///< Output offset at 0 Pa, in volt
