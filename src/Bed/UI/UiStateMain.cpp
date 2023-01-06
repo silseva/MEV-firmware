@@ -48,20 +48,15 @@ BedMainPage::BedMainPage(BedFsmData* fsm) : fsm(fsm)
            enable->getUpperLeftCorner().y()),
      btnWidth, btnHeight, "Disable", droid21);
 
-    setTin = make_unique< Button >
+    setup = make_unique< Button >
     (Point(enable->getUpperLeftCorner().x(),
            enable->getLowerRightCorner().y() + btnSpace),
-     btnWidth, btnHeight, "Set T_ins", droid21);
+     btnWidth, btnHeight, "Setup", droid21);
 
-    setIE = make_unique< Button >
+    calib = make_unique< Button >
     (Point(disable->getUpperLeftCorner().x(),
            disable->getLowerRightCorner().y() + btnSpace),
-     btnWidth, btnHeight, "Set I/E", droid21);
-
-    setFs = make_unique< Button >
-    (Point(setTin->getUpperLeftCorner().x(),
-           setTin->getLowerRightCorner().y() + btnSpace),
-     btnWidth, btnHeight, "Set F_s", droid21);
+     btnWidth, btnHeight, "Calib", droid21);
 }
 
 BedMainPage::~BedMainPage() { }
@@ -76,14 +71,13 @@ FsmState *BedMainPage::update()
     Event event = InputHandler::instance().popEvent();
     bool enaPressed = enable->handleTouchEvent(event);
     bool disPressed = disable->handleTouchEvent(event);
-    bool tinPressed = setTin->handleTouchEvent(event);
-    bool ratPressed = setIE->handleTouchEvent(event);
-    bool fsaPressed = setFs->handleTouchEvent(event);
+    bool setPressed = setup->handleTouchEvent(event);
+    bool calPressed = calib->handleTouchEvent(event);
+
     enable->draw(fsm->dc);
     disable->draw(fsm->dc);
-    setTin->draw(fsm->dc);
-    setIE->draw(fsm->dc);
-    setFs->draw(fsm->dc);
+    setup->draw(fsm->dc);
+    calib->draw(fsm->dc);
 
     // Update pressure indicator
     char text[50] = {0};
@@ -112,27 +106,8 @@ FsmState *BedMainPage::update()
     // Enable/disable
     if(enaPressed) fsm->state.enabled = true;
     if(disPressed) fsm->state.enabled = false;
-
-    // Handle Ti input request
-    if(tinPressed)
-    {
-        fsm->state.set_tIns = true;
-        return &fsm->inputVal;
-    }
-
-    // Handle I/E ratio input request
-    if(ratPressed)
-    {
-        fsm->state.set_ratio = true;
-        return &fsm->inputVal;
-    }
-
-    // Handle sample frequency input request
-    if(fsaPressed)
-    {
-        fsm->state.set_fsample = true;
-        return &fsm->inputVal;
-    }
+    if(calPressed) return &fsm->calSensors;
+    if(setPressed) return &fsm->setup;
 
     return nullptr;
 }
@@ -144,13 +119,11 @@ void BedMainPage::leave()
     Event event(EventType::TouchUp);
     enable->handleTouchEvent(event);
     disable->handleTouchEvent(event);
-    setTin->handleTouchEvent(event);
-    setIE->handleTouchEvent(event);
-    setFs->handleTouchEvent(event);
+    setup->handleTouchEvent(event);
+    calib->handleTouchEvent(event);
 
     enable->draw(fsm->dc);
     disable->draw(fsm->dc);
-    setTin->draw(fsm->dc);
-    setIE->draw(fsm->dc);
-    setFs->draw(fsm->dc);
+    setup->draw(fsm->dc);
+    calib->draw(fsm->dc);
 }

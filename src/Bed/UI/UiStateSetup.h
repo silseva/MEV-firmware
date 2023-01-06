@@ -27,7 +27,7 @@ class BedFsmData;
 /**
  * FSM state for Bell-Jar controller UI: main view.
  */
-class BedMainPage : public FsmState
+class BedSetupPage : public FsmState
 {
 public:
 
@@ -35,12 +35,12 @@ public:
      * Constructor.
      * @param fsm: pointer to FSM data structure.
      */
-    BedMainPage(BedFsmData* fsm);
+    BedSetupPage(BedFsmData* fsm);
 
     /**
      * Destructor.
      */
-    virtual ~BedMainPage();
+    virtual ~BedSetupPage();
 
     /**
      * Function to be called on state enter.
@@ -70,12 +70,10 @@ private:
     static constexpr mxgui::Color sbLabColor = mxgui::black;
     static constexpr mxgui::Color uiBkgColor = mxgui::grey;
 
-    static const std::vector< std::string > paramLabels;
-    std::unique_ptr< DisplayBox > statusBox;
-    std::unique_ptr< Button >     enable;
-    std::unique_ptr< Button >     disable;
-    std::unique_ptr< Button >     setup;
-    std::unique_ptr< Button >     calib;
+    std::unique_ptr< Button > setTin;
+    std::unique_ptr< Button > setIE;
+    std::unique_ptr< Button > setFs;
+    std::unique_ptr< Button > ret;
 
     BedFsmData* fsm;
 };

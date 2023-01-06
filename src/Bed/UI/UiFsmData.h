@@ -22,6 +22,8 @@
 #include <limits>
 #include "UiStateMain.h"
 #include "UiStateInputValue.h"
+#include "UiStateCalSensors.h"
+#include "UiStateSetup.h"
 #include "../BedState.h"
 
 class BedFsmData
@@ -30,11 +32,14 @@ public:
 
     BedFsmData(StateData& state) :
                   dc(mxgui::DisplayManager::instance().getDisplay()),
-                  mainPage(this), inputVal(this), state(state) {}
+                  mainPage(this), inputVal(this), calSensors(this), setup(this),
+                  state(state) {}
 
     mxgui::DrawingContext dc;
 
-    BedMainPage   mainPage;
-    BedInputValue inputVal;
-    StateData&    state;
+    BedMainPage     mainPage;
+    BedInputValue   inputVal;
+    BedCalibSensors calSensors;
+    BedSetupPage    setup;
+    StateData&      state;
 };

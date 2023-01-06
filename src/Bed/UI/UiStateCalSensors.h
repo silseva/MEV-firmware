@@ -1,6 +1,6 @@
 /*
  * MEV board firmware
- * Copyright (C) 2021  Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2022  Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@
 class BedFsmData;
 
 /**
- * FSM state for Bell-Jar controller UI: main view.
+ * FSM state for Bell-Jar controller UI: input configurations page.
  */
-class BedMainPage : public FsmState
+class BedCalibSensors : public FsmState
 {
 public:
 
@@ -35,12 +35,12 @@ public:
      * Constructor.
      * @param fsm: pointer to FSM data structure.
      */
-    BedMainPage(BedFsmData* fsm);
+    BedCalibSensors(BedFsmData* fsm);
 
     /**
      * Destructor.
      */
-    virtual ~BedMainPage();
+    virtual ~BedCalibSensors();
 
     /**
      * Function to be called on state enter.
@@ -61,21 +61,17 @@ public:
 
 private:
 
-    static constexpr unsigned int leftMargin = 10;
-    static constexpr unsigned int topMargin  = 30;
-    static constexpr unsigned int btnSpace   = 10;
-    static constexpr unsigned int btnHeight  = 40;
-    static constexpr unsigned int sbHeight   = 130;
-    static constexpr mxgui::Color sbBgColor  = mxgui::white;
-    static constexpr mxgui::Color sbLabColor = mxgui::black;
-    static constexpr mxgui::Color uiBkgColor = mxgui::grey;
+    void writeLine(const int pos, const char *label, const uint16_t raw,
+                   const float conv);
 
-    static const std::vector< std::string > paramLabels;
-    std::unique_ptr< DisplayBox > statusBox;
-    std::unique_ptr< Button >     enable;
-    std::unique_ptr< Button >     disable;
-    std::unique_ptr< Button >     setup;
-    std::unique_ptr< Button >     calib;
+    static constexpr unsigned int spacing   = 5;
+    static constexpr unsigned int btnSpace  = 20;
+    static constexpr unsigned int btnWidth  = 30;
+    static constexpr unsigned int btnHeight = 30;
+
+    std::unique_ptr< Button > zero[4];
+    std::unique_ptr< Button > max[4];
+    std::unique_ptr< Button > ret;
 
     BedFsmData* fsm;
 };
