@@ -70,10 +70,20 @@ private:
     static constexpr mxgui::Color sbLabColor = mxgui::black;
     static constexpr mxgui::Color uiBkgColor = mxgui::grey;
 
+    enum class KbInputSource : uint8_t
+    {
+        NONE  = 0,
+        T_INS = 1,
+        RATIO = 2,
+        FSAMP = 3
+    };
+
     std::unique_ptr< Button > setTin;
     std::unique_ptr< Button > setIE;
     std::unique_ptr< Button > setFs;
     std::unique_ptr< Button > ret;
+
+    KbInputSource inputSource;
 
     BedFsmData* fsm;
 };

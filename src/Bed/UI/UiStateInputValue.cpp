@@ -1,6 +1,6 @@
 /*
  * MEV board firmware
- * Copyright (C) 2021  Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2023  Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <miosix.h>
+#include <memory>
 #include "UiStateInputValue.h"
 #include "UiFsmData.h"
 
@@ -30,7 +30,10 @@ BedInputValue::BedInputValue(BedFsmData* fsm) : fsm(fsm)
     kb = make_unique< Keypad >(kb_x, kb_y);
 }
 
-BedInputValue::~BedInputValue(){ }
+BedInputValue::~BedInputValue()
+{
+
+}
 
 void BedInputValue::enter()
 {
@@ -41,39 +44,19 @@ void BedInputValue::enter()
 
 FsmState *BedInputValue::update()
 {
-    Event event = InputHandler::instance().popEvent();
+    Event     event    = InputHandler::instance().popEvent();
+    FsmState *nxtState = nullptr;
+
     if(kb->handleEvent(event, fsm->dc))
     {
-        float value = kb->getNumber();
-        if(value != numeric_limits< float >::quiet_NaN())
-        {
-            value = max(0.0f, value);
-
-            if(fsm->state.set_tIns)
-            {
-                fsm->state.tIns = value;
-                fsm->state.set_tIns = false;
-            }
-
-            if(fsm->state.set_ratio)
-            {
-                fsm->state.IE = value;
-                fsm->state.set_ratio = false;
-            }
-
-            if(fsm->state.set_fsample)
-            {
-                fsm->state.Fsample = value;
-                fsm->state.set_fsample = false;
-            }
-
-            return &fsm->mainPage;
-        }
+        fsm->kbInput = kb->getNumber();
+        nxtState     = fsm->prevState;
     }
 
-    return nullptr;
+    return nxtState;
 }
 
 void BedInputValue::leave()
 {
+
 }

@@ -25,7 +25,8 @@ using namespace mxgui;
 using namespace std;
 
 
-BedSetupPage::BedSetupPage(BedFsmData* fsm) : fsm(fsm)
+BedSetupPage::BedSetupPage(BedFsmData* fsm) : inputSource(KbInputSource::NONE),
+                                              fsm(fsm)
 {
     unsigned int btnWidth = (fsm->dc.getWidth() - (2*leftMargin + btnSpace))/2;
     unsigned int bx       = leftMargin;
@@ -56,6 +57,30 @@ void BedSetupPage::enter()
 
 FsmState *BedSetupPage::update()
 {
+    if(fsm->kbInput != numeric_limits< float >::quiet_NaN())
+    {
+        switch(inputSource)
+        {
+            case KbInputSource::T_INS:
+                fsm->state.tIns = fsm->kbInput;
+                break;
+
+            case KbInputSource::RATIO:
+                fsm->state.IE = fsm->kbInput;
+                break;
+
+            case KbInputSource::FSAMP:
+                fsm->state.Fsample = fsm->kbInput;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    inputSource = KbInputSource::NONE;
+    fsm->kbInput  = numeric_limits< float >::quiet_NaN();
+
     Event event = InputHandler::instance().popEvent();
     bool tinPressed = setTin->handleTouchEvent(event);
     bool ratPressed = setIE->handleTouchEvent(event);
@@ -70,21 +95,24 @@ FsmState *BedSetupPage::update()
     // Handle Ti input request
     if(tinPressed)
     {
-        fsm->state.set_tIns = true;
+        inputSource    = KbInputSource::T_INS;
+        fsm->prevState = this;
         return &fsm->inputVal;
     }
 
     // Handle I/E ratio input request
     if(ratPressed)
     {
-        fsm->state.set_ratio = true;
+        inputSource    = KbInputSource::RATIO;
+        fsm->prevState = this;
         return &fsm->inputVal;
     }
 
     // Handle sample frequency input request
     if(fsaPressed)
     {
-        fsm->state.set_fsample = true;
+        inputSource    = KbInputSource::FSAMP;
+        fsm->prevState = this;
         return &fsm->inputVal;
     }
 

@@ -21,9 +21,6 @@
 struct StateData
 {
     bool enabled;
-    bool set_tIns;
-    bool set_ratio;
-    bool set_fsample;
     float tIns;
     float IE;
     float Fsample;

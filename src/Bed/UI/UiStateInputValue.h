@@ -1,6 +1,6 @@
 /*
  * MEV board firmware
- * Copyright (C) 2021  Silvano Seva silvano.seva@polimi.it
+ * Copyright (C) 2023  Silvano Seva silvano.seva@polimi.it
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 class BedFsmData;
 
 /**
- * FSM state for Bell-Jar controller UI: set-point input.
+ * FSM state for bed controller UI: set-point input.
  */
 class BedInputValue : public FsmState
 {

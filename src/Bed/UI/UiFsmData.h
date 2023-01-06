@@ -20,10 +20,10 @@
 
 #include <mxgui/display.h>
 #include <limits>
-#include "UiStateMain.h"
-#include "UiStateInputValue.h"
 #include "UiStateCalSensors.h"
+#include "UiStateInputValue.h"
 #include "UiStateSetup.h"
+#include "UiStateMain.h"
 #include "../BedState.h"
 
 class BedFsmData
@@ -32,10 +32,13 @@ public:
 
     BedFsmData(StateData& state) :
                   dc(mxgui::DisplayManager::instance().getDisplay()),
+                  kbInput(std::numeric_limits< float >::quiet_NaN()),
                   mainPage(this), inputVal(this), calSensors(this), setup(this),
                   state(state) {}
 
     mxgui::DrawingContext dc;
+    float kbInput;
+    FsmState *prevState;
 
     BedMainPage     mainPage;
     BedInputValue   inputVal;
