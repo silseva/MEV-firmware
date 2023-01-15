@@ -30,10 +30,14 @@ BedCalibSensors::BedCalibSensors(BedFsmData* fsm) : fsm(fsm)
     unsigned int bWidth = (fsm->dc.getWidth() - (2*spacing + btnSpace))/2;
     unsigned int bx     = 10;
     unsigned int by     = fsm->dc.getHeight() - 10 - btnHeight;
-    ret = make_unique< Button >(Point(bx, by), bWidth, btnHeight, "Back",
+    back = make_unique< Button >(Point(bx, by), bWidth, btnHeight, "Back",
                                  droid21);
 
-    unsigned int space = ret->getUpperLeftCorner().y() - 110;
+    bx = fsm->dc.getWidth() - 10 - bWidth;
+    reset = make_unique< Button >(Point(bx, by), bWidth, btnHeight, "Reset",
+                                  droid21);
+
+    unsigned int space = back->getUpperLeftCorner().y() - 110;
     space -= 2*btnHeight + 10;
     bx     = fsm->dc.getWidth() - 5 - 4*50;
     by     = 110 + (space / 2);
@@ -93,10 +97,12 @@ FsmState *BedCalibSensors::update()
         max[i]->draw(fsm->dc);
     }
 
-    bool retPressed  = ret->handleTouchEvent(event);
-    ret->draw(fsm->dc);
+    bool backPressed  = back->handleTouchEvent(event);
+    bool resetPressed = reset->handleTouchEvent(event);
+    back->draw(fsm->dc);
+    reset->draw(fsm->dc);
 
-    if(retPressed)  nxtState = &fsm->mainPage;
+    if(backPressed) nxtState = &fsm->mainPage;
 
     return nxtState;
 }
@@ -120,4 +126,3 @@ void BedCalibSensors::writeLine(const int pos, const char* label,
     snprintf(str, sizeof(str), "conv: %.2f", conv);
     fsm->dc.write(p2, str);
 }
-

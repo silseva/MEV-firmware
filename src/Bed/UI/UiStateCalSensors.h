@@ -71,7 +71,8 @@ private:
 
     std::unique_ptr< Button > zero[4];
     std::unique_ptr< Button > max[4];
-    std::unique_ptr< Button > ret;
+    std::unique_ptr< Button > reset;
+    std::unique_ptr< Button > back;
 
     BedFsmData* fsm;
 };
