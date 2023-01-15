@@ -32,6 +32,47 @@ enum class Sensor : uint8_t
     FLOW_2  = 3,
 };
 
+/**
+ * Container class to handle sensors' calibration parameters.
+ */
+struct SensorCalibration
+{
+    /**
+     * Default constructor, load all fields with their default values.
+     */
+    SensorCalibration()
+    {
+        loadDefaultValues();
+    }
+
+    /**
+     * Reset all the fields with their default values;
+     */
+    void loadDefaultValues()
+    {
+        for(int i = 0; i < 2; i++)
+        {
+            flowSens[i].offset  = 0.5f;
+            flowSens[i].slope   = 25.0f;
+            pressSens[i].offset = 0.2f;
+            pressSens[i].slope  = 2222.222f;
+        }
+    }
+
+    typedef struct
+    {
+        float offset;
+        float slope;
+    }
+    cal_t;
+
+    cal_t flowSens[2];
+    cal_t pressSens[2];
+};
+
+/**
+ * Analog sensors' manager class.
+ */
 class AnalogSensors
 {
 public:
@@ -74,6 +115,13 @@ public:
      * @return sensor output or signalling NaN on failure.
      */
     float getValue(const Sensor sensor);
+
+    /**
+     * Apply external calibration parameters to all the sensors.
+     *
+     * @param cal: data structure holding the sensors' calibration parameters.
+     */
+    void applyCalibration(const SensorCalibration& cal);
 
     /**
      * Copy constructor, deleted as this class is singleton.

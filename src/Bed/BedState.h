@@ -18,8 +18,12 @@
 
 #pragma once
 
+#include "AnalogSensors.h"
+
 struct StateData
 {
+    SensorCalibration cal;
+
     bool enabled;
     float tIns;
     float IE;

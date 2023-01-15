@@ -89,20 +89,97 @@ FsmState *BedCalibSensors::update()
 
     Event     event    = InputHandler::instance().popEvent();
     FsmState *nxtState = nullptr;
+    bool     updateCal = false;
 
+    // Handle sensors' zeroing
     for(int i = 0; i < 4; i++)
     {
-        bool zeroPressed = zero[i]->handleTouchEvent(event);
+        if(zero[i]->handleTouchEvent(event))
+        {
+            updateCal = true;
+
+            switch(i)
+            {
+                case 0:     // Pressure 1
+                    state.cal.pressSens[0].offset = sens.getVoltage(Sensor::PRESS_1);
+                    break;
+
+                case 1:     // Pressure 2
+                    state.cal.pressSens[1].offset = sens.getVoltage(Sensor::PRESS_2);
+                    break;
+
+                case 2:     // Flow rate 1
+                    state.cal.flowSens[0].offset = sens.getVoltage(Sensor::FLOW_1);
+                    break;
+
+                case 3:     // Flow rate 2
+                    state.cal.flowSens[1].offset = sens.getVoltage(Sensor::FLOW_2);
+                    break;
+            }
+        }
+
         zero[i]->draw(fsm->dc);
+    }
+
+    // Handle sensors' slope calibration
+    for(int i = 0; i < 4; i++)
+    {
+        float output;
+
+        if(max[i]->handleTouchEvent(event))
+        {
+            updateCal = true;
+
+            switch(i)
+            {
+                case 0:     // Pressure 1, FS 10kPa
+                    output = sens.getVoltage(Sensor::PRESS_1)
+                           - state.cal.pressSens[0].offset;
+                    state.cal.pressSens[0].slope = 10000.0f / output;
+                    break;
+
+                case 1:     // Pressure 2, FS 10kPa
+                    output = sens.getVoltage(Sensor::PRESS_2)
+                           - state.cal.pressSens[1].offset;
+                    state.cal.pressSens[1].slope = 10000.0f / output;
+                    break;
+
+                case 2:     // Flow rate 1, FS 100SLPM
+                    output = sens.getVoltage(Sensor::FLOW_1)
+                           - state.cal.flowSens[0].offset;
+                    state.cal.flowSens[0].slope = 100.0f / output;
+                    break;
+
+                case 3:     // Flow rate 2, FS 100SLPM
+                    output = sens.getVoltage(Sensor::FLOW_2)
+                           - state.cal.flowSens[1].offset;
+                    state.cal.flowSens[1].slope = 100.0f / output;
+                    break;
+            }
+        }
+
         max[i]->draw(fsm->dc);
     }
 
-    bool backPressed  = back->handleTouchEvent(event);
-    bool resetPressed = reset->handleTouchEvent(event);
+    // Go back to previous page?
+    if(back->handleTouchEvent(event))
+            nxtState = &fsm->mainPage;
+
+    // Reset calibrations?
+    if(reset->handleTouchEvent(event))
+    {
+        state.cal.loadDefaultValues();
+        updateCal = true;
+    }
+
+    if(updateCal)
+    {
+        sens.applyCalibration(state.cal);
+    }
+
+    // Draw buttons
     back->draw(fsm->dc);
     reset->draw(fsm->dc);
-
-    if(backPressed) nxtState = &fsm->mainPage;
 
     return nxtState;
 }

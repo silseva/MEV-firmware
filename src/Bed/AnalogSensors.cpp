@@ -113,11 +113,22 @@ float AnalogSensors::getValue(const Sensor sensor)
         case Sensor::PRESS_1: value = press1.getDiffPressure(); break;
         case Sensor::PRESS_2: value = press2.getDiffPressure(); break;
         case Sensor::FLOW_1:  value = flow1.getFlowRate();      break;
-        case Sensor::FLOW_2:  value = flow1.getFlowRate();      break;
+        case Sensor::FLOW_2:  value = flow2.getFlowRate();      break;
         default:                                                break;
     }
 
     return value;
+}
+
+void AnalogSensors::applyCalibration(const SensorCalibration& cal)
+{
+    // Tune flow sensors
+    flow1.setOutputParameters(cal.flowSens[0].offset, cal.flowSens[0].slope);
+    flow2.setOutputParameters(cal.flowSens[1].offset, cal.flowSens[1].slope);
+
+    // Tune pressure sensors
+    press1.setOutputParameters(cal.pressSens[0].offset, cal.pressSens[0].slope);
+    press2.setOutputParameters(cal.pressSens[1].offset, cal.pressSens[1].slope);
 }
 
 AdcChannel AnalogSensors::selectInput(const Sensor sensor)
