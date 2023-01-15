@@ -22,7 +22,6 @@
 #include "drivers/MPX5010.h"
 #include "drivers/FS1015CL.h"
 #include "drivers/hwmapping.h"
-#include "drivers/ADC122S021.h"
 #include "drivers/calibration.h"
 
 using namespace miosix;
@@ -86,17 +85,8 @@ uint16_t AnalogSensors::getRawValue(const Sensor sensor)
     if(sensor > Sensor::FLOW_2)
         return 0xFFFF;
 
-    // Select mux channel, wait 30ms to allow the LPF to settle
-    uint8_t index  = static_cast< uint8_t > (sensor);
-    auto    config = AdChConfig[index];
-
-    if(config.muxSel != adc::muxs::value())
-    {
-        (config.muxSel == 1) ? adc::muxs::high() : adc::muxs::low();
-        delayMs(30);
-    }
-
-    return Adc.getRawValue(config.channel);
+    auto ch = selectInput(sensor);
+    return Adc.getRawValue(ch);
 }
 
 float AnalogSensors::getValue(const Sensor sensor)
@@ -106,15 +96,7 @@ float AnalogSensors::getValue(const Sensor sensor)
     if(sensor > Sensor::FLOW_2)
         return value;
 
-    // Select mux channel, wait 30ms to allow the LPF to settle
-    uint8_t index  = static_cast< uint8_t > (sensor);
-    auto    config = AdChConfig[index];
-
-    if(config.muxSel != adc::muxs::value())
-    {
-        (config.muxSel == 1) ? adc::muxs::high() : adc::muxs::low();
-        delayMs(50);
-    }
+    selectInput(sensor);
 
     // Acquire measurement
     switch(sensor)
@@ -127,4 +109,19 @@ float AnalogSensors::getValue(const Sensor sensor)
     }
 
     return value;
+}
+
+AdcChannel AnalogSensors::selectInput(const Sensor sensor)
+{
+    // Select mux channel, wait 30ms to allow the LPF to settle
+    uint8_t index  = static_cast< uint8_t > (sensor);
+    auto    config = AdChConfig[index];
+
+    if(config.muxSel != adc::muxs::value())
+    {
+        (config.muxSel == 1) ? adc::muxs::high() : adc::muxs::low();
+        delayMs(50);
+    }
+
+    return config.channel;
 }

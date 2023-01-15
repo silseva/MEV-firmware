@@ -16,7 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <cstdint>
+#include "drivers/ADC122S021.h"
 
 enum class Sensor : uint8_t
 {
@@ -89,4 +92,12 @@ private:
      * Default constructor
      */
     AnalogSensors();
+
+    /**
+     * Select multiplexer input given the sensor to sample.
+     *
+     * @param sensor: sensor to be sampled.
+     * @return corresponding ADC channel number.
+     */
+    AdcChannel selectInput(const Sensor sensor);
 };
