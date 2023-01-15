@@ -89,6 +89,15 @@ uint16_t AnalogSensors::getRawValue(const Sensor sensor)
     return Adc.getRawValue(ch);
 }
 
+float AnalogSensors::getVoltage(const Sensor sensor)
+{
+    if(sensor > Sensor::FLOW_2)
+        return 0xFFFF;
+
+    auto ch = selectInput(sensor);
+    return Adc.getVoltage(ch);
+}
+
 float AnalogSensors::getValue(const Sensor sensor)
 {
     float value = std::numeric_limits< float >::signaling_NaN();

@@ -21,6 +21,9 @@
 #include <cstdint>
 #include "drivers/ADC122S021.h"
 
+/**
+ * Enumerating type for sensors' identification.
+ */
 enum class Sensor : uint8_t
 {
     PRESS_1 = 0,
@@ -46,21 +49,29 @@ public:
     ~AnalogSensors();
 
     /**
-     * Read the current value of one of the two ADC channel and returns it as
-     * raw value expressed in ADC counts.
+     * Read the output value of a given sensor as raw ADC counts.
      * Returns 0xFFFF in case of an hardware failure.
      *
      * @param channel: channel number.
-     * @return channel raw value or 0xFFFF on failure.
+     * @return sensor raw output value or 0xFFFF on failure.
      */
     uint16_t getRawValue(const Sensor sensor);
 
     /**
-     * Read the current voltage of one of the two ADC channel.
+     * Read the output voltage of a given sensor.
      * Returns a signalling NaN in case of an hardware failure.
      *
      * @param channel: channel number.
-     * @return channel value or signalling NaN on failure.
+     * @return sensor output voltage or signalling NaN on failure.
+     */
+    float getVoltage(const Sensor sensor);
+
+    /**
+     * Read the output of a given sensor.
+     * Returns a signalling NaN in case of an hardware failure.
+     *
+     * @param channel: channel number.
+     * @return sensor output or signalling NaN on failure.
      */
     float getValue(const Sensor sensor);
 
