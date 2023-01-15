@@ -61,9 +61,9 @@ public:
             return voltage;
         }
 
-        // Voltage < 0.5V sensor error
-        // Voltage > 4.5V sensor over scale
-        if((voltage < 0.5f) || (voltage > 4.5f))
+        // Voltage < 0.45V sensor error
+        // Voltage > 4.65V sensor over scale
+        if((voltage < 0.45f) || (voltage > 4.65f))
         {
             return std::numeric_limits< float >::signaling_NaN();
         }
