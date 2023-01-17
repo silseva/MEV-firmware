@@ -73,12 +73,10 @@ FsmState *BedCalibSensors::update()
     fsm->dc.clear(lightGrey);
     fsm->dc.setTextColor(black, lightGrey);
 
-    AnalogSensors& sens = AnalogSensors::instance();
-
-    writeLine(0, "P1", sens.getRawValue(Sensor::PRESS_1), sens.getValue(Sensor::PRESS_1));
-    writeLine(1, "P2", sens.getRawValue(Sensor::PRESS_2), sens.getValue(Sensor::PRESS_2));
-    writeLine(2, "F1", sens.getRawValue(Sensor::FLOW_1),  sens.getValue(Sensor::FLOW_1));
-    writeLine(3, "F2", sens.getRawValue(Sensor::FLOW_2),  sens.getValue(Sensor::FLOW_2));
+    writeLine(0, "P1", state.press1_raw, state.press_1);
+    writeLine(1, "P2", state.press2_raw, state.press_2);
+    writeLine(2, "F1", state.flow1_raw,  state.flow_1);
+    writeLine(3, "F2", state.flow2_raw,  state.flow_2);
 
     unsigned int txtOffset = (btnHeight - droid21.getHeight()) / 2;
     Point txt1(10, zero[0]->getUpperLeftCorner().y() + txtOffset);
@@ -101,19 +99,19 @@ FsmState *BedCalibSensors::update()
             switch(i)
             {
                 case 0:     // Pressure 1
-                    state.cal.pressSens[0].offset = sens.getVoltage(Sensor::PRESS_1);
+                    state.cal.pressSens[0].offset = state.press1_out;
                     break;
 
                 case 1:     // Pressure 2
-                    state.cal.pressSens[1].offset = sens.getVoltage(Sensor::PRESS_2);
+                    state.cal.pressSens[1].offset = state.press2_out;
                     break;
 
                 case 2:     // Flow rate 1
-                    state.cal.flowSens[0].offset = sens.getVoltage(Sensor::FLOW_1);
+                    state.cal.flowSens[0].offset = state.flow1_out;
                     break;
 
                 case 3:     // Flow rate 2
-                    state.cal.flowSens[1].offset = sens.getVoltage(Sensor::FLOW_2);
+                    state.cal.flowSens[1].offset = state.flow2_out;
                     break;
             }
         }
@@ -133,25 +131,25 @@ FsmState *BedCalibSensors::update()
             switch(i)
             {
                 case 0:     // Pressure 1, FS 10kPa
-                    output = sens.getVoltage(Sensor::PRESS_1)
+                    output = state.press1_out
                            - state.cal.pressSens[0].offset;
                     state.cal.pressSens[0].slope = 10000.0f / output;
                     break;
 
                 case 1:     // Pressure 2, FS 10kPa
-                    output = sens.getVoltage(Sensor::PRESS_2)
+                    output = state.press2_out
                            - state.cal.pressSens[1].offset;
                     state.cal.pressSens[1].slope = 10000.0f / output;
                     break;
 
                 case 2:     // Flow rate 1, FS 100SLPM
-                    output = sens.getVoltage(Sensor::FLOW_1)
+                    output = state.flow1_out
                            - state.cal.flowSens[0].offset;
                     state.cal.flowSens[0].slope = 100.0f / output;
                     break;
 
                 case 3:     // Flow rate 2, FS 100SLPM
-                    output = sens.getVoltage(Sensor::FLOW_2)
+                    output = state.flow2_out
                            - state.cal.flowSens[1].offset;
                     state.cal.flowSens[1].slope = 100.0f / output;
                     break;
@@ -174,7 +172,7 @@ FsmState *BedCalibSensors::update()
 
     if(updateCal)
     {
-        sens.applyCalibration(state.cal);
+        AnalogSensors::instance().applyCalibration(state.cal);
     }
 
     // Draw buttons

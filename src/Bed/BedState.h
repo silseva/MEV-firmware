@@ -24,15 +24,25 @@ struct StateData
 {
     SensorCalibration cal;
 
-    bool enabled;
+    bool  enabled;
     float tIns;
     float IE;
     float Fsample;
 
-    float press_1;
-    float press_2;
-    float flow_1;
-    float flow_2;
+    uint16_t press1_raw;    // Output value of pressure sensor 1 in ADC counts
+    uint16_t press2_raw;    // Output value of pressure sensor 2 in ADC counts
+    uint16_t flow1_raw;     // Output value of flow sensor 1 in ADC counts
+    uint16_t flow2_raw;     // Output value of flow sensor 2 in ADC counts
+
+    float press1_out;       // Output value of pressure sensor 1 in volt
+    float press2_out;       // Output value of pressure sensor 2 in volt
+    float flow1_out;        // Output value of flow sensor 1 in volt
+    float flow2_out;        // Output value of flow sensor 2 in volt
+
+    float press_1;          // Output value of pressure sensor 1 in Pa
+    float press_2;          // Output value of pressure sensor 2 in Pa
+    float flow_1;           // Output value of flow sensor 1 in SLPM
+    float flow_2;           // Output value of flow sensor 2 in SLPM
     float volume_1;
     float volume_2;
     bool  resetVolumes;

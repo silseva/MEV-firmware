@@ -42,18 +42,32 @@ void SensorSampler::run()
     while(!should_stop)
     {
         // Time step for measurements update, in milliseconds.
-        // Default to 1Hz if no sampling frequency is specified.
-        uint32_t updateStep = 1000;
+        // Default to 10Hz if no sampling frequency is specified.
+        uint32_t updateStep = 100;
         if(state.Fsample > 0)
         {
             updateStep = 1000 / static_cast< uint32_t >(state.Fsample);
         }
 
+        // Pressure sensor 1
+        state.press1_raw = sensors.getRawValue(Sensor::PRESS_1);
+        state.press1_out = sensors.getVoltage(Sensor::PRESS_1);
+        state.press_1    = sensors.getValue(Sensor::PRESS_1);
 
-        state.press_1 = sensors.getValue(Sensor::PRESS_1);
-        state.press_2 = sensors.getValue(Sensor::PRESS_2);
-        state.flow_1  = sensors.getValue(Sensor::FLOW_1);
-        state.flow_2  = sensors.getValue(Sensor::FLOW_2);
+        // Pressure sensor 2
+        state.press2_raw = sensors.getRawValue(Sensor::PRESS_2);
+        state.press2_out = sensors.getVoltage(Sensor::PRESS_2);
+        state.press_2    = sensors.getValue(Sensor::PRESS_2);
+
+        // Flow sensor 1
+        state.flow1_raw  = sensors.getRawValue(Sensor::FLOW_1);
+        state.flow1_out  = sensors.getVoltage(Sensor::FLOW_1);
+        state.flow_1     = sensors.getValue(Sensor::FLOW_1);
+
+        // Flow sensor 2
+        state.flow2_raw  = sensors.getRawValue(Sensor::FLOW_2);
+        state.flow2_out  = sensors.getVoltage(Sensor::FLOW_2);
+        state.flow_2     = sensors.getValue(Sensor::FLOW_2);
 
         // Flow rate is in l/min while update step is in ms, hence we have to
         // divide the flow rate by 60 s/min * 1000 ms/s.
