@@ -95,12 +95,11 @@ void SensorSampler::run()
         }
 
         #ifdef SAMPLER_PRINT
-        printf("%.3f,%.3f,%.3f,%.3f,%.3f,%.3f, %d,%d\n",
-                                              state.press_1,  state.press_2,
-                                              state.flow_1,   state.flow_2,
-                                              state.volume_1, state.volume_2,
-                                              hpOutputs::out_1::value(),
-                                              hpOutputs::out_2::value());
+        printf("%.3f,%.3f,%.3f,%.3f,%.3f, %d,%d\n", state.press_1, state.flow_1,
+                                                    state.flow_2,  state.volume_1,
+                                                    state.volume_2,
+                                                    hpOutputs::out_1::value(),
+                                                    hpOutputs::out_2::value());
         #endif
 
         Thread::sleepUntil(time);

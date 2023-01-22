@@ -81,8 +81,7 @@ FsmState *BedMainPage::update()
 
     // Update pressure indicator
     char text[50] = {0};
-    snprintf(text, sizeof(text), "%03.1f  %03.1f", fsm->state.press_1,
-                                                   fsm->state.press_2);
+    snprintf(text, sizeof(text), "%03.1f", fsm->state.press_1);
     statusBox->setEntryValue(0, text,  black);
 
     // Update flow rate indicator
