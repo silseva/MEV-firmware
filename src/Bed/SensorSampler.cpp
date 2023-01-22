@@ -17,6 +17,7 @@
  */
 
 #include <miosix.h>
+#include <cmath>
 #include "SensorSampler.h"
 #include "BedState.h"
 
@@ -71,11 +72,20 @@ void SensorSampler::run()
 
         // Flow rate is in l/min while update step is in ms, hence we have to
         // divide the flow rate by 60 s/min * 1000 ms/s.
-        state.volume_1 += (state.flow_1 / 60000.0f)
-                        * static_cast< float > (updateStep);
+        //
+        // Do not update the volume in case of faulty sensor
+        if(std::isnan(state.flow_1) == false)
+        {
+            state.volume_1 += (state.flow_1 / 60000.0f)
+                            * static_cast< float > (updateStep);
+        }
 
-        state.volume_2 += (state.flow_2 / 60000.0f)
-                        * static_cast< float > (updateStep);
+        if(std::isnan(state.flow_1) == false)
+        {
+            state.volume_2 += (state.flow_2 / 60000.0f)
+                            * static_cast< float > (updateStep);
+        }
+
 
         if(state.resetVolumes)
         {
