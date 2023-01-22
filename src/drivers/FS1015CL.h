@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <limits>
 #include "ADC122S021.h"
@@ -68,7 +69,8 @@ public:
             return std::numeric_limits< float >::signaling_NaN();
         }
 
-        return (voltage - OFFSET) * SLOPE;
+        // Never return a negative flow rate
+        return std::max(0.0f, (voltage - OFFSET) * SLOPE);
     }
 
     /**
