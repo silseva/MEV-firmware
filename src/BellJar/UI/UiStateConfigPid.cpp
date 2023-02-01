@@ -18,7 +18,7 @@
 
 #include <array>
 #include <memory>
-#include <BellJar/settings.h>
+#include "common/Persistence.h"
 #include "UiStateConfigPid.h"
 #include "UiFsmData.h"
 
@@ -117,7 +117,7 @@ FsmState *BjConfigPid::update()
 
     if(retPressed)
     {
-        saveParamsToFlash(bjState.ctParams);
+        saveDataToFlash(&bjState.ctParams, sizeof(PidParameters));
         nxtState = &fsm->setupInput;
     }
 

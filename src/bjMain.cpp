@@ -5,10 +5,10 @@
 #include "miosix.h"
 #include "mxgui/display.h"
 
-#include "BellJar/UI/UiFsmData.h"
+#include "common/Persistence.h"
 #include "BellJar/LevelController.h"
+#include "BellJar/UI/UiFsmData.h"
 #include "BellJar/BjState.h"
-#include "BellJar/settings.h"
 
 using namespace std;
 using namespace mxgui;
@@ -17,7 +17,7 @@ BjState bjState;
 
 int main()
 {
-    if(loadParamsFromFlash(bjState.ctParams) == false)
+    if(loadDataFromFlash(&bjState.ctParams, sizeof(PidParameters)) == false)
     {
         // Loading saved parameters went wrong, initialize them to safe values
         bjState.ctParams.uMin    = 0.0f;
