@@ -40,7 +40,7 @@ memory_t;
 
 static const uint32_t MEM_MAGIC   = 0x4D424A46; // "MBJF"
 static const uint32_t baseAddress = 0x080E0000;
-memory_t *memory = ((memory_t *) baseAddress);
+static memory_t *memory = ((memory_t *) baseAddress);
 
 
 /**

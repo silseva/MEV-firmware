@@ -20,6 +20,7 @@
 #include <memory>
 #include "UiStateCalSensors.h"
 #include "UiFsmData.h"
+#include "common/Persistence.h"
 #include "Bed/AnalogSensors.h"
 
 using namespace mxgui;
@@ -184,7 +185,7 @@ FsmState *BedCalibSensors::update()
 
 void BedCalibSensors::leave()
 {
-
+    saveDataToFlash(&(state.cal), sizeof(SensorCalibration));
 }
 
 void BedCalibSensors::writeLine(const int pos, const char* label,
