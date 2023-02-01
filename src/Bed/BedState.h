@@ -18,7 +18,20 @@
 
 #pragma once
 
+#include "common/RingBuffer.h"
 #include "AnalogSensors.h"
+
+typedef struct
+{
+    unsigned long long int timestamp;
+    float   pressure;
+    float   flow1;
+    float   flow2;
+    float   volume1;
+    float   volume2;
+    uint8_t valves;
+}
+loggerSample_t;
 
 struct StateData
 {
@@ -46,6 +59,8 @@ struct StateData
     float volume_1;
     float volume_2;
     bool  resetVolumes;
+
+    RingBuffer< loggerSample_t, 131072 > log;   // 4MB buffer, 128k entries
 };
 
 extern StateData state;

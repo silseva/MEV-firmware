@@ -21,10 +21,9 @@
 #include "SensorSampler.h"
 #include "BedState.h"
 
-#define SAMPLER_PRINT
-
 using namespace std;
 using namespace miosix;
+
 
 SensorSampler::SensorSampler() : sensors(AnalogSensors::instance())
 {
@@ -102,12 +101,34 @@ void SensorSampler::run()
             state.resetVolumes = false;
         }
 
-        #ifdef SAMPLER_PRINT
-        printf("%.3f,%.3f,%.3f,%.3f,%.3f, %d,%d\n", state.press_1, state.flow_1,
-                                                    state.flow_2,  state.volume_1,
-                                                    state.volume_2,
-                                                    hpOutputs::out_1::value(),
-                                                    hpOutputs::out_2::value());
+        #ifndef LOG_PRINT
+        // Log data at each update step
+        if(state.enabled || (tail > 0))
+        {
+            loggerSample_t sample;
+            sample.timestamp = getTick();
+            sample.pressure  = state.press_1;
+            sample.flow1     = state.flow_1;
+            sample.flow2     = state.flow_2;
+            sample.volume1   = state.volume_1;
+            sample.volume2   = state.volume_2;
+            sample.valves    = (hpOutputs::out_2::value() << 1)
+                             |  hpOutputs::out_1::value();
+
+            state.log.push(sample, true);
+
+            // Sampling tail, 2s
+            if(state.enabled || (sample.valves != 0))
+                tail = 50;
+            else
+                tail -= 1;
+        }
+        #else
+        printf("%llu,%.3f,%.3f,%.3f,%.3f,%.3f,%d,%d\n",
+                getTick(),                 state.press_1,
+                state.flow_1,              state.flow_2,
+                state.volume_1,            state.volume_2,
+                hpOutputs::out_1::value(), hpOutputs::out_2::value());
         #endif
 
         turn += 1;
