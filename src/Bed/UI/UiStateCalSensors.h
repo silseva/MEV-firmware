@@ -74,5 +74,7 @@ private:
     std::unique_ptr< Button > reset;
     std::unique_ptr< Button > back;
 
+    int sensorToUpdate;
+
     BedFsmData* fsm;
 };

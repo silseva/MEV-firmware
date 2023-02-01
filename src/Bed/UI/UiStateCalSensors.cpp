@@ -26,7 +26,7 @@
 using namespace mxgui;
 using namespace std;
 
-BedCalibSensors::BedCalibSensors(BedFsmData* fsm) : fsm(fsm)
+BedCalibSensors::BedCalibSensors(BedFsmData* fsm) : sensorToUpdate(-1), fsm(fsm)
 {
     unsigned int bWidth = (fsm->dc.getWidth() - (2*spacing + btnSpace))/2;
     unsigned int bx     = 10;
@@ -40,14 +40,17 @@ BedCalibSensors::BedCalibSensors(BedFsmData* fsm) : fsm(fsm)
 
     unsigned int space = back->getUpperLeftCorner().y() - 110;
     space -= 2*btnHeight + 10;
-    bx     = fsm->dc.getWidth() - 5 - 4*50;
+    bx     = fsm->dc.getWidth() - 5 - 3*50;
     by     = 110 + (space / 2);
 
     char name[3] = "P1";
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 3; i++)
     {
-        if(i >= 2) name[0] = 'F';
-        name[1] = '1' + (i % 2);
+        if(i >= 1)
+        {
+            name[0] = 'F';
+            name[1] = '1' + (i / 2);
+        }
 
         zero[i] = make_unique< Button >(Point(bx, by), 40, btnHeight, name,
                                         droid21);
@@ -75,9 +78,8 @@ FsmState *BedCalibSensors::update()
     fsm->dc.setTextColor(black, lightGrey);
 
     writeLine(0, "P1", state.press1_raw, state.press_1);
-    writeLine(1, "P2", state.press2_raw, state.press_2);
-    writeLine(2, "F1", state.flow1_raw,  state.flow_1);
-    writeLine(3, "F2", state.flow2_raw,  state.flow_2);
+    writeLine(1, "F1", state.flow1_raw,  state.flow_1);
+    writeLine(2, "F2", state.flow2_raw,  state.flow_2);
 
     unsigned int txtOffset = (btnHeight - droid21.getHeight()) / 2;
     Point txt1(10, zero[0]->getUpperLeftCorner().y() + txtOffset);
@@ -90,8 +92,37 @@ FsmState *BedCalibSensors::update()
     FsmState *nxtState = nullptr;
     bool     updateCal = false;
 
+    // Update flow sensor calibration with user input
+    if(sensorToUpdate >= 0)
+    {
+        float fullScale = fsm->kbInput;
+        float output    = 0.0f;
+
+        switch(sensorToUpdate)
+        {
+            case 1:
+                output = state.flow1_out
+                       - state.cal.flowSens[0].offset;
+                state.cal.flowSens[0].slope = fullScale / output;
+                break;
+
+            case 2:
+                output = state.flow2_out
+                       - state.cal.flowSens[1].offset;
+                state.cal.flowSens[1].slope = fullScale / output;
+                break;
+
+            default:
+                break;
+        }
+
+        updateCal      = true;
+        sensorToUpdate = -1;
+        fsm->kbInput   = numeric_limits< float >::quiet_NaN();
+    }
+
     // Handle sensors' zeroing
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 3; i++)
     {
         if(zero[i]->handleTouchEvent(event))
         {
@@ -103,15 +134,11 @@ FsmState *BedCalibSensors::update()
                     state.cal.pressSens[0].offset = state.press1_out;
                     break;
 
-                case 1:     // Pressure 2
-                    state.cal.pressSens[1].offset = state.press2_out;
-                    break;
-
-                case 2:     // Flow rate 1
+                case 1:     // Flow rate 1
                     state.cal.flowSens[0].offset = state.flow1_out;
                     break;
 
-                case 3:     // Flow rate 2
+                case 2:     // Flow rate 2
                     state.cal.flowSens[1].offset = state.flow2_out;
                     break;
             }
@@ -120,44 +147,29 @@ FsmState *BedCalibSensors::update()
         zero[i]->draw(fsm->dc);
     }
 
-    // Handle sensors' slope calibration
-    for(int i = 0; i < 4; i++)
+    // Handle pressure sensor slope calibration
+    if(max[0]->handleTouchEvent(event))
     {
-        float output;
+        float output = state.press1_out - state.cal.pressSens[0].offset;
+        state.cal.pressSens[0].slope = 10000.0f / output;
+        updateCal = true;
+    }
+    max[0]->draw(fsm->dc);
 
+    // Handle flow sensor slope calibration
+    for(int i = 1; i < 3; i++)
+    {
         if(max[i]->handleTouchEvent(event))
-        {
-            updateCal = true;
-
-            switch(i)
-            {
-                case 0:     // Pressure 1, FS 10kPa
-                    output = state.press1_out
-                           - state.cal.pressSens[0].offset;
-                    state.cal.pressSens[0].slope = 10000.0f / output;
-                    break;
-
-                case 1:     // Pressure 2, FS 10kPa
-                    output = state.press2_out
-                           - state.cal.pressSens[1].offset;
-                    state.cal.pressSens[1].slope = 10000.0f / output;
-                    break;
-
-                case 2:     // Flow rate 1, FS 100SLPM
-                    output = state.flow1_out
-                           - state.cal.flowSens[0].offset;
-                    state.cal.flowSens[0].slope = 100.0f / output;
-                    break;
-
-                case 3:     // Flow rate 2, FS 100SLPM
-                    output = state.flow2_out
-                           - state.cal.flowSens[1].offset;
-                    state.cal.flowSens[1].slope = 100.0f / output;
-                    break;
-            }
-        }
+            sensorToUpdate = i;
 
         max[i]->draw(fsm->dc);
+    }
+
+    // Go to user input?
+    if(sensorToUpdate >= 0)
+    {
+        fsm->prevState = this;
+        nxtState = &fsm->inputVal;
     }
 
     // Go back to previous page?
