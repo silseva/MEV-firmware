@@ -39,53 +39,61 @@ SensorSampler::~SensorSampler()
 void SensorSampler::run()
 {
     unsigned long long time = getTick();
+    uint8_t            turn = 0;
+    uint8_t            tail = 0;
+
+    sensors.selectInput(Sensor::PRESS_1);
 
     while(!should_stop)
     {
-        // Time step for measurements update, in milliseconds.
-        // Default to 10Hz if no sampling frequency is specified.
-        uint32_t updateStep = 100;
-        if(state.Fsample > 0)
+        if((turn % 2) == 0)
         {
-            updateStep = 1000 / static_cast< uint32_t >(state.Fsample);
+            // Update pressure measurements
+            state.press1_raw = sensors.getRawValue(Sensor::PRESS_1);
+            state.press1_out = sensors.getVoltage(Sensor::PRESS_1);
+            state.press_1    = sensors.getValue(Sensor::PRESS_1);
+
+            state.press2_raw = 0;    // sensors.getRawValue(Sensor::PRESS_2);
+            state.press2_out = 0.0f; // sensors.getVoltage(Sensor::PRESS_2);
+            state.press_2    = 0.0f; // sensors.getValue(Sensor::PRESS_2);
+
+            // Preset input multiplexer for next turn;
+            sensors.selectInput(Sensor::FLOW_1);
         }
-
-        // Pressure sensor 1
-        state.press1_raw = sensors.getRawValue(Sensor::PRESS_1);
-        state.press1_out = sensors.getVoltage(Sensor::PRESS_1);
-        state.press_1    = sensors.getValue(Sensor::PRESS_1);
-
-        // Pressure sensor 2
-        state.press2_raw = sensors.getRawValue(Sensor::PRESS_2);
-        state.press2_out = sensors.getVoltage(Sensor::PRESS_2);
-        state.press_2    = sensors.getValue(Sensor::PRESS_2);
-
-        // Flow sensor 1
-        state.flow1_raw  = sensors.getRawValue(Sensor::FLOW_1);
-        state.flow1_out  = sensors.getVoltage(Sensor::FLOW_1);
-        state.flow_1     = sensors.getValue(Sensor::FLOW_1);
-
-        // Flow sensor 2
-        state.flow2_raw  = sensors.getRawValue(Sensor::FLOW_2);
-        state.flow2_out  = sensors.getVoltage(Sensor::FLOW_2);
-        state.flow_2     = sensors.getValue(Sensor::FLOW_2);
-
-        // Flow rate is in l/min while update step is in ms, hence we have to
-        // divide the flow rate by 60 s/min * 1000 ms/s.
-        //
-        // Do not update the volume in case of faulty sensor
-        if(std::isnan(state.flow_1) == false)
+        else
         {
-            state.volume_1 += (state.flow_1 / 60000.0f)
-                            * static_cast< float > (updateStep);
-        }
+            // Update flow measurements
+            state.flow1_raw  = sensors.getRawValue(Sensor::FLOW_1);
+            state.flow1_out  = sensors.getVoltage(Sensor::FLOW_1);
+            state.flow_1     = sensors.getValue(Sensor::FLOW_1);
 
-        if(std::isnan(state.flow_1) == false)
-        {
-            state.volume_2 += (state.flow_2 / 60000.0f)
-                            * static_cast< float > (updateStep);
-        }
+            state.flow2_raw  = sensors.getRawValue(Sensor::FLOW_2);
+            state.flow2_out  = sensors.getVoltage(Sensor::FLOW_2);
+            state.flow_2     = sensors.getValue(Sensor::FLOW_2);
 
+            // Flow rate is in l/min while update step is in ms, hence we have
+            // to divide the flow rate by 60 s/min * 1000 ms/s.
+            //
+            // Update volumes only if valve controller is running and flow
+            // measurements contain valid data.
+            if(state.enabled)
+            {
+                if(std::isnan(state.flow_1) == false)
+                {
+                    state.volume_1 += (state.flow_1 / 60000.0f)
+                                    * static_cast< float > (updateStep);
+                }
+
+                if(std::isnan(state.flow_2) == false)
+                {
+                    state.volume_2 += (state.flow_2 / 60000.0f)
+                                    * static_cast< float > (updateStep);
+                }
+            }
+
+            // Preset input multiplexer for next turn;
+            sensors.selectInput(Sensor::PRESS_1);
+        }
 
         if(state.resetVolumes)
         {
@@ -102,6 +110,8 @@ void SensorSampler::run()
                                                     hpOutputs::out_2::value());
         #endif
 
+        turn += 1;
+        time += updateStep;
         Thread::sleepUntil(time);
     }
 }

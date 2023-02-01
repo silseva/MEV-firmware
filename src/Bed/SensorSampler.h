@@ -50,5 +50,6 @@ private:
      */
     virtual void run() override;
 
-    AnalogSensors& sensors;  ///< Analog sensors manager
+    static constexpr uint32_t updateStep = 40;  ///< 40ms update step (25Hz)
+    AnalogSensors&            sensors;          ///< Analog sensors manager
 };

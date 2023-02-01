@@ -117,6 +117,14 @@ public:
     float getValue(const Sensor sensor);
 
     /**
+     * Select multiplexer input given the sensor to sample.
+     *
+     * @param sensor: sensor to be sampled.
+     * @return corresponding ADC channel number.
+     */
+    AdcChannel selectInput(const Sensor sensor);
+
+    /**
      * Apply external calibration parameters to all the sensors.
      *
      * @param cal: data structure holding the sensors' calibration parameters.
@@ -151,12 +159,4 @@ private:
      * Default constructor
      */
     AnalogSensors();
-
-    /**
-     * Select multiplexer input given the sensor to sample.
-     *
-     * @param sensor: sensor to be sampled.
-     * @return corresponding ADC channel number.
-     */
-    AdcChannel selectInput(const Sensor sensor);
 };

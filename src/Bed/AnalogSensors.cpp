@@ -120,6 +120,19 @@ float AnalogSensors::getValue(const Sensor sensor)
     return value;
 }
 
+AdcChannel AnalogSensors::selectInput(const Sensor sensor)
+{
+    uint8_t index  = static_cast< uint8_t > (sensor);
+    auto    config = AdChConfig[index];
+
+    if(config.muxSel != adc::muxs::value())
+    {
+        (config.muxSel == 1) ? adc::muxs::high() : adc::muxs::low();
+    }
+
+    return config.channel;
+}
+
 void AnalogSensors::applyCalibration(const SensorCalibration& cal)
 {
     // Tune flow sensors
@@ -129,19 +142,4 @@ void AnalogSensors::applyCalibration(const SensorCalibration& cal)
     // Tune pressure sensors
     press1.setOutputParameters(cal.pressSens[0].offset, cal.pressSens[0].slope);
     press2.setOutputParameters(cal.pressSens[1].offset, cal.pressSens[1].slope);
-}
-
-AdcChannel AnalogSensors::selectInput(const Sensor sensor)
-{
-    // Select mux channel, wait 30ms to allow the LPF to settle
-    uint8_t index  = static_cast< uint8_t > (sensor);
-    auto    config = AdChConfig[index];
-
-    if(config.muxSel != adc::muxs::value())
-    {
-        (config.muxSel == 1) ? adc::muxs::high() : adc::muxs::low();
-        delayMs(50);
-    }
-
-    return config.channel;
 }
