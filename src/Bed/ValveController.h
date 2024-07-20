@@ -18,12 +18,13 @@
 
 #pragma once
 
+#include "common/ActiveObject.h"
 #include "BedState.h"
 
 /**
  *
  */
-class ValveController
+class ValveController : public ActiveObject
 {
 public:
 
@@ -36,14 +37,14 @@ public:
     /**
      * Destructor.
      */
-    ~ValveController();
+    virtual ~ValveController();
+
+private:
 
     /**
      *
      */
-    void run();
-
-private:
+    virtual void run() override;
 
     StateData& state;
 };
