@@ -18,7 +18,7 @@ SUBDIRS := $(KPATH) lib/mxgui
 ##
 ## List here your source files (both .s, .c and .cpp)
 ##
-SRC :=                                  \
+SRC_COMMON :=                           \
 src/graphics/icons/warning_50x50.cpp    \
 src/graphics/ConfirmBox.cpp             \
 src/graphics/DisplayBox.cpp             \
@@ -26,23 +26,44 @@ src/graphics/Rectangle.cpp              \
 src/graphics/TextBox.cpp                \
 src/graphics/Button.cpp                 \
 src/graphics/Keypad.cpp                 \
-\
+src/drivers/display_stm32.cpp           \
+src/drivers/calibration.cpp             \
 src/drivers/ADC122S021.cpp              \
-\
+src/drivers/flash.cpp                   \
+src/common/PidRegulator.cpp             \
+src/common/Persistence.cpp
+
+SRC_BED :=                              \
 src/Bed/UI/UiStateMain.cpp              \
 src/Bed/UI/UiStateInputValue.cpp        \
-\
+src/Bed/UI/UiStateCalSensors.cpp        \
+src/Bed/UI/UiStateSetup.cpp             \
+src/Bed/AnalogSensors.cpp               \
 src/Bed/ValveController.cpp             \
 src/Bed/SensorSampler.cpp               \
-\
-src/main.cpp
+src/bedMain.cpp
 
-# src/BellJar/UI/UiStateConfAut.cpp       \
-# src/BellJar/UI/UiStateConfMan.cpp       \
-# src/BellJar/UI/UiStateConfSp.cpp        \
-# src/BellJar/UI/UiStateMain.cpp          \
-# src/BellJar/UI/UiStateSetSp.cpp         \
+SRC_BJ :=                               \
+src/BellJar/UI/UiStateConfAut.cpp       \
+src/BellJar/UI/UiStateConfMan.cpp       \
+src/BellJar/UI/UiStateConfSp.cpp        \
+src/BellJar/UI/UiStateMain.cpp          \
+src/BellJar/UI/UiStateInputVal.cpp      \
+src/BellJar/UI/UiStateConfigPid.cpp     \
+src/BellJar/UI/UiStateConfigInput.cpp   \
+src/BellJar/LevelController.cpp         \
+src/drivers/Blower.cpp                  \
+src/bjMain.cpp
 
+SRC_CALIB :=                            \
+src/Bed/AnalogSensors.cpp               \
+src/Bed/ValveController.cpp             \
+src/Bed/SensorSampler.cpp               \
+src/calibMain.cpp
+
+# SRC := $(SRC_BED) $(SRC_COMMON)
+# SRC := $(SRC_BJ)  $(SRC_COMMON)
+SRC := $(SRC_CALIB) $(SRC_COMMON)
 
 ##
 ## List here additional static libraries with relative path
